@@ -8,7 +8,7 @@ namespace HillClimber
         {
             Random random = new Random();
 
-            string target = "ksand";
+            string target = "Thank you Michael!";
 
             char[] current = new char[target.Length];
             for (int i = 0; i < target.Length; i++)
@@ -74,7 +74,7 @@ namespace HillClimber
 
             Console.ForegroundColor = original;
 
-            System.Threading.Thread.Sleep(1);
+        //    System.Threading.Thread.Sleep(1);
         }
     }
 }
