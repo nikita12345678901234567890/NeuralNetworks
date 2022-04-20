@@ -8,7 +8,7 @@ namespace HillClimber
         {
             Random random = new Random();
 
-            string target = "Thank you Michael!";
+            string target = "you are a fish?";
 
             char[] current = new char[target.Length];
             for (int i = 0; i < target.Length; i++)
