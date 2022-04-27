@@ -73,6 +73,7 @@ namespace HillClimber2
             this.GenerateButton.TabIndex = 3;
             this.GenerateButton.Text = "Generate";
             this.GenerateButton.UseVisualStyleBackColor = false;
+            this.GenerateButton.Click += new System.EventHandler(this.GenerateButton_Click);
             // 
             // Form1
             // 
