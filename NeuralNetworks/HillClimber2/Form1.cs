@@ -13,6 +13,8 @@ namespace HillClimber2
     public partial class Form1 : Form
     {
         List<(TextBox xBox, TextBox yBox)> Coordinates;
+        List<Point> Points;
+
         Bitmap canvas;
         Graphics g;
         Random random = new Random();
@@ -28,12 +30,13 @@ namespace HillClimber2
         private void Form1_Load(object sender, EventArgs e)
         {
             Coordinates = new List<(TextBox xBox, TextBox yBox)>();
+            Points = new List<Point>();
 
             canvas = new Bitmap(pictureBox1.Size.Width, pictureBox1.Height);
             g = Graphics.FromImage(canvas);
             drawStuff();
         }
-        
+
         //make line
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
@@ -69,13 +72,18 @@ namespace HillClimber2
                 Text = clickLocation.Y.ToString(),
                 Size = suze,
             };
+
             Coordinates.Add((xBox, yBox));
+            Points.Add(clickLocation);
 
             xBox.TextChanged += XBox_TextChanged;
             yBox.TextChanged += YBox_TextChanged;
 
-            this.Controls.Add(Coordinates[Coordinates.Count - 1].xBox);
-            this.Controls.Add(Coordinates[Coordinates.Count - 1].yBox);
+            xBox.Tag = Points.Count - 1;
+            yBox.Tag = Points.Count - 1;
+
+            this.Controls.Add(xBox);
+            this.Controls.Add(yBox);
 
             drawStuff();
         }
@@ -83,8 +91,10 @@ namespace HillClimber2
         private void XBox_TextChanged(object s, EventArgs e)
         {
             TextBox sender = (TextBox)s;
+            int tag = int.Parse(sender.Tag.ToString());
             if (sender.Text != "")
-            { 
+            {
+                Points[tag] = new Point(int.Parse(sender.Text), Points[tag].Y);
                 drawStuff();
             }
         }
@@ -92,8 +102,10 @@ namespace HillClimber2
         private void YBox_TextChanged(object s, EventArgs e)
         {
             TextBox sender = (TextBox)s;
+            int tag = int.Parse(sender.Tag.ToString());
             if (sender.Text != "")
             {
+                Points[tag] = new Point(Points[tag].X, int.Parse(sender.Text));
                 drawStuff();
             }
         }
@@ -116,9 +128,9 @@ namespace HillClimber2
         {
             int radius = 5;
 
-            for (int i = 0; i < Coordinates.Count; i++)
+            for (int i = 0; i < Points.Count; i++)
             {
-                g.FillEllipse(Brushes.Chocolate, new Rectangle(ConvertCoords(new Point(int.Parse(Coordinates[i].xBox.Text) - radius, int.Parse(Coordinates[i].yBox.Text) + radius)), new Size(radius*2, radius*2)));
+                g.FillEllipse(Brushes.Chocolate, new Rectangle(Point.Subtract(ConvertCoords(Points[i]), new Size(radius, radius)), new Size(radius * 2, radius * 2)));
             }
         }
 
@@ -144,11 +156,14 @@ namespace HillClimber2
 
         private async void GenerateButton_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 10000; i++)
             {
-                await Task.Delay(1);
                 mutate();
-                drawStuff();
+                if (i % 10 == 0)
+                {
+                    await Task.Delay(1);
+                    drawStuff();
+                }
             }
         }
 
@@ -158,13 +173,19 @@ namespace HillClimber2
             var prevM = m;
             var prevB = b;
 
-            if (random.Next(2) == 0)
+            int yeet = random.Next(5);
+            if (yeet == 0)
             {
-                m *= (float)(random.NextDouble() + 0.5);
+                m += (float)(random.NextDouble() - 0.5) * 25;
+            }
+            else if (yeet == 1)
+            {
+                b += (float)(random.NextDouble() - 0.5) * 25;
             }
             else
             {
-                b *= (float)(random.NextDouble() + 0.5);
+                m += (float)(random.NextDouble() - 0.5) * 25;
+                b += (float)(random.NextDouble() - 0.5) * 25;
             }
 
             if (error() >= prevError)
@@ -176,16 +197,16 @@ namespace HillClimber2
 
         public float error()
         {
-            float sum = 0;
+            double sum = 0;
 
-            for (int i = 0; i < Coordinates.Count; i++)
+            for (int i = 0; i < Points.Count; i++)
             {
-                int y = (int)((m * int.Parse(Coordinates[i].xBox.Text)) + b);
+                int y = (int)((m * Points[i].X) + b);
 
-                sum += Math.Abs(y - int.Parse(Coordinates[i].yBox.Text));
+                sum += Math.Pow(y - Points[i].Y, 2);
             }
 
-            return sum / Coordinates.Count();
+            return (float)sum / Points.Count;
         }
     }
 }
