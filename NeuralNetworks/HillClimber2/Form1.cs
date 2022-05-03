@@ -121,6 +121,7 @@ namespace HillClimber2
             drawGridlines();
             drawPoints();
             drawLine();
+            drawProperLine();
             pictureBox1.Image = canvas;
         }
 
@@ -152,6 +153,24 @@ namespace HillClimber2
         public void drawLine()
         {
             g.DrawLine(Pens.Red, ConvertCoords(new Point(0, (int)b)), ConvertCoords(new Point(pictureBox1.Width, (int)((m * pictureBox1.Width) + b))));
+        }
+
+        public void drawProperLine()
+        {
+            if (Points.Count > 1)
+            {
+                float xA = Points.Select(p => p.X).Sum() / (float)Points.Count;
+                float yA = Points.Select(p => p.Y).Sum() / (float)Points.Count;
+
+                float top = Points.Select(p => (p.X - xA) * (p.Y - yA)).Sum();
+                float bot = Points.Select(p => (p.X - xA) * (p.X - xA)).Sum();
+
+                float mf = top / (float)bot;
+
+                int bf = (int)(yA - (mf * xA));
+
+                g.DrawLine(Pens.Blue, ConvertCoords(new Point(0, bf)), ConvertCoords(new Point(pictureBox1.Width, (int)((mf * pictureBox1.Width) + bf))));
+            }
         }
 
         private async void GenerateButton_Click(object sender, EventArgs e)
