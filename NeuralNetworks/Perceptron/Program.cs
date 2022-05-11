@@ -15,13 +15,15 @@ namespace Perceptron
             double[][] testValues = { new double[] { 0, 0 }, new double[] { 0 , 1 }, new double[] { 1, 1 }, new double[] { 1, 0 } };
             double[] desiredValues = { 0, 0, 1, 0};
 
-            double currentError = perceptron.GetError(testValues, desiredValues);
-            perceptron.TrainWithHillClimbing(new double[][]
-            {
+            double currentError = double.MaxValue;
 
-            }, new double[] { }, ref currentError);
+            while (currentError > 0)
+            { 
+                perceptron.TrainWithHillClimbing( testValues, desiredValues, ref currentError);
+                Console.WriteLine(currentError);
+            }
 
-
+            ;
 
 
             ////var results = perceptron.Compute(testValues);

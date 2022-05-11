@@ -18,6 +18,8 @@ namespace Perceptron
 
         public Perceptron(int amountOfInputs, double min, double max)/*Initializes the weights array given the amount of inputs*/
         {
+            weights = new double[amountOfInputs];
+
             Randomize(amountOfInputs, min, max);
         }
 
@@ -88,6 +90,7 @@ namespace Perceptron
 
             if (newError < currentError)
             {
+                currentError = newError;
                 return newError;
             }
             else
