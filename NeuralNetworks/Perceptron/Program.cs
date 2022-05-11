@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Perceptron
 {
@@ -8,18 +9,29 @@ namespace Perceptron
 
         static void Main(string[] args)
         {
-            double[] weights = { 0.75, -1.25 };
-            double bias = 0.5;
-            Perceptron perceptron = new Perceptron(weights, bias);
+            Perceptron perceptron = new Perceptron(2, -1, 1);
 
-            double[][] testValues = { new double[] { 0, 0 }, new double[] { 0.3, -0.7 }, new double[] { 1, 1 }, new double[] { -1, -1 }, new double[] { -0.5, 0.5 } };
 
-            var results = perceptron.Compute(testValues);
+            double[][] testValues = { new double[] { 0, 0 }, new double[] { 0 , 1 }, new double[] { 1, 1 }, new double[] { 1, 0 } };
+            double[] desiredValues = { 0, 0, 1, 0};
 
-            foreach (var result in results)
+            double currentError = perceptron.GetError(testValues, desiredValues);
+            perceptron.TrainWithHillClimbing(new double[][]
             {
-                Console.WriteLine(result);
-            }
+
+            }, new double[] { }, ref currentError);
+
+
+
+
+            ////var results = perceptron.Compute(testValues);
+
+            ///perceptron.
+
+            //foreach (var result in results)
+            //{
+            //    Console.WriteLine(result);
+            //}
         }
     }
 }

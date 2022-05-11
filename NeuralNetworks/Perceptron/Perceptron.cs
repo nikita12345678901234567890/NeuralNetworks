@@ -16,9 +16,9 @@ namespace Perceptron
             bias = initialBiasValue;
         }
 
-        public Perceptron(int amountOfInputs)/*Initializes the weights array given the amount of inputs*/
+        public Perceptron(int amountOfInputs, double min, double max)/*Initializes the weights array given the amount of inputs*/
         {
-            
+            Randomize(amountOfInputs, min, max);
         }
 
         public void Randomize(int numInputs, double min, double max)/*Randomly generates values for every weight including the bias*/
@@ -59,17 +59,43 @@ namespace Perceptron
 
             for (int i = 0; i < inputs.Length; i++)
             {
-                double output = (int)((weights[i] * inputs[i]) + b);
+                for (int j = 0; j < inputs[i].Length; j++)
+                {
+                    double output = (int)((weights[j] * inputs[i][j]) + bias);
 
-                sum += Math.Pow(y - Points[i].Y, 2);
+                    sum += Math.Pow(output - desiredOutputs[i], 2);
+                }
             }
 
-            return (float)sum / Points.Count;
+            return (float)sum / inputs.Length;
         }
 
-        public double TrainWithHillClimbing(double[][] inputs, double[] desiredOutputs, double currentError)/*attempts one hill climbing training iteration and returns the new current error*/ 
-        { 
-        
+        public double TrainWithHillClimbing(double[][] inputs, double[] desiredOutputs, ref double currentError) //attempts one hill climbing training iteration and returns the new current error
+        {
+            var prevWeights = weights;
+            var prevBias = bias;
+
+            if (random.Next(0, 2) == 0)
+            {
+                weights[random.Next(weights.Length)] += (random.Next(0, 2) == 0 ? 1 : -1);
+            }
+            else
+            { 
+                bias += (random.Next(0, 2) == 0 ? 1 : -1);
+            }
+
+            double newError = GetError(inputs, desiredOutputs);
+
+            if (newError < currentError)
+            {
+                return newError;
+            }
+            else
+            {
+                weights = prevWeights;
+                bias = prevBias;
+                return currentError;
+            }
         }
     }
 }
