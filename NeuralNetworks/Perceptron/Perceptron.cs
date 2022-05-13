@@ -8,17 +8,20 @@ namespace Perceptron
     {
         public double[] weights;
         public double bias;
+        public double mutationAmount;
         Random random = new Random();
 
-        public Perceptron(double[] initialWeightValues, double initialBiasValue)/*initializes the weights array and bias*/ 
+        public Perceptron(double[] initialWeightValues, double initialBiasValue, double mutationAmount)/*initializes the weights array and bias*/
         {
             weights = initialWeightValues;
             bias = initialBiasValue;
+            this.mutationAmount = mutationAmount;
         }
 
-        public Perceptron(int amountOfInputs, double min, double max)/*Initializes the weights array given the amount of inputs*/
+        public Perceptron(int amountOfInputs, double min, double max, double mutationAmount)/*Initializes the weights array given the amount of inputs*/
         {
             weights = new double[amountOfInputs];
+            this.mutationAmount = mutationAmount;
 
             Randomize(amountOfInputs, min, max);
         }
@@ -34,14 +37,14 @@ namespace Perceptron
 
         public double Compute(double[] inputs)/*computes the output with given input*/
         {
-            double sum = 0;
+            double sum = bias;
 
             for (int i = 0; i < inputs.Length; i++)
             {
                 sum += inputs[i] * weights[i];
             }
 
-            return sum + bias;
+            return sum;
         }
 
         public double[] Compute(double[][] inputs)/*computes the output for each row of inputs*/
@@ -58,15 +61,11 @@ namespace Perceptron
         public double GetError(double[][] inputs, double[] desiredOutputs)/*computes the output using the inputs returns the average error between each output row and each desired output row using errorFunc*/
         {
             double sum = 0;
+            var outputs = Compute(inputs);
 
-            for (int i = 0; i < inputs.Length; i++)
+            for (int j = 0; j < outputs.Length; j++)
             {
-                for (int j = 0; j < inputs[i].Length; j++)
-                {
-                    double output = (int)((weights[j] * inputs[i][j]) + bias);
-
-                    sum += Math.Pow(output - desiredOutputs[i], 2);
-                }
+                sum += Math.Pow(outputs[j] - desiredOutputs[j], 2);
             }
 
             return (float)sum / inputs.Length;
@@ -74,16 +73,16 @@ namespace Perceptron
 
         public double TrainWithHillClimbing(double[][] inputs, double[] desiredOutputs, ref double currentError) //attempts one hill climbing training iteration and returns the new current error
         {
-            var prevWeights = weights;
-            var prevBias = bias;
+            double mut = random.NextDouble(-mutationAmount, mutationAmount);
 
-            if (random.Next(0, 2) == 0)
+            int index = random.Next(-1, weights.Length);
+            if (index >= 0)
             {
-                weights[random.Next(weights.Length)] += (random.Next(0, 2) == 0 ? 1 : -1);
+                weights[index] += mut;
             }
             else
-            { 
-                bias += (random.Next(0, 2) == 0 ? 1 : -1);
+            {
+                bias += mut;
             }
 
             double newError = GetError(inputs, desiredOutputs);
@@ -95,8 +94,14 @@ namespace Perceptron
             }
             else
             {
-                weights = prevWeights;
-                bias = prevBias;
+                if (index >= 0)
+                {
+                    weights[index] -= mut;
+                }
+                else
+                {
+                    bias -= mut;
+                }
                 return currentError;
             }
         }
