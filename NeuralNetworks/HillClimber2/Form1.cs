@@ -152,7 +152,13 @@ namespace HillClimber2
 
         public void drawLine()
         {
-            g.DrawLine(Pens.Red, ConvertCoords(new Point(0, (int)b)), ConvertCoords(new Point(pictureBox1.Width, (int)((m * pictureBox1.Width) + b))));
+            //g.DrawLine(Pens.Red, ConvertCoords(new Point(0, (int)b)), ConvertCoords(new Point(pictureBox1.Width, (int)((m * pictureBox1.Width) + b))));
+            g.DrawLine(Pens.Red, ConvertCoords(new Point(0, (int)Compute(0.0))), ConvertCoords(new Point(pictureBox1.Width, (int)Compute(pictureBox1.Width))));
+        }
+
+        public double Compute(double x)
+        {
+            return m * x + b;
         }
 
         public void drawProperLine()
@@ -178,7 +184,7 @@ namespace HillClimber2
             for (int i = 0; i < 10000; i++)
             {
                 mutate();
-                if (i % 10 == 0)
+                if (i % 100 == 0)
                 {
                     await Task.Delay(1);
                     drawStuff();
@@ -218,14 +224,12 @@ namespace HillClimber2
         {
             double sum = 0;
 
-            for (int i = 0; i < Points.Count; i++)
+            foreach (Point point in Points)
             {
-                int y = (int)((m * Points[i].X) + b);
-
-                sum += Math.Pow(y - Points[i].Y, 2);
+                sum += Math.Pow(Compute(point.X) - point.Y, 2);
             }
 
-            return (float)sum / Points.Count;
+            return (float)(sum / Points.Count);
         }
     }
 }
