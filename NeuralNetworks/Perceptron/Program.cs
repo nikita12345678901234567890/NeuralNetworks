@@ -10,7 +10,7 @@ namespace Perceptron
         static void Main(string[] args)
         {
             (double[][] inputs, double[] outputs) = OrAndInOuts();
-            Perceptron perceptron = new Perceptron(inputs[0].Length, -1, 1, 0.001);
+            Perceptron perceptron = new Perceptron(inputs[0].Length, -1, 1, 0.1);
 
             double currentError = perceptron.GetError(inputs, outputs);
             bool debug = true;

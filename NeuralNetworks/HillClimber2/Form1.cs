@@ -19,8 +19,10 @@ namespace HillClimber2
         Graphics g;
         Random random = new Random();
 
-        public float m = 1;
-        public float b = 1;
+        public double m = 1;
+        public double b = 1;
+
+        Perceptron.Perceptron perceptron;
 
         public Form1()
         {
@@ -32,12 +34,12 @@ namespace HillClimber2
             Coordinates = new List<(TextBox xBox, TextBox yBox)>();
             Points = new List<Point>();
 
+            perceptron = new Perceptron.Perceptron(Points.Count, 0, 1000, 1);
+
             canvas = new Bitmap(pictureBox1.Size.Width, pictureBox1.Height);
             g = Graphics.FromImage(canvas);
             drawStuff();
         }
-
-        //make line
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
@@ -152,8 +154,7 @@ namespace HillClimber2
 
         public void drawLine()
         {
-            //g.DrawLine(Pens.Red, ConvertCoords(new Point(0, (int)b)), ConvertCoords(new Point(pictureBox1.Width, (int)((m * pictureBox1.Width) + b))));
-            g.DrawLine(Pens.Red, ConvertCoords(new Point(0, (int)Compute(0.0))), ConvertCoords(new Point(pictureBox1.Width, (int)Compute(pictureBox1.Width))));
+            g.DrawLine(Pens.Red, ConvertCoords(new Point(0, (int)b)), ConvertCoords(new Point(pictureBox1.Width, (int)((m * pictureBox1.Width) + b))));
         }
 
         public double Compute(double x)
@@ -181,15 +182,40 @@ namespace HillClimber2
 
         private async void GenerateButton_Click(object sender, EventArgs e)
         {
+            var Phish = PointsToInputs();//Phish is BACK!!!!!
+            double error = 0;
+            perceptron.TrainWithHillClimbing(Phish.inputs, Phish.outputs, ref error);
+
+            m = perceptron.weights[0];
+            b = perceptron.bias;
+
+            drawStuff(); //don't make a double[] of 0;
+            /*
             for (int i = 0; i < 10000; i++)
             {
                 mutate();
+
                 if (i % 100 == 0)
                 {
                     await Task.Delay(1);
                     drawStuff();
                 }
             }
+            */
+        }
+
+        public (double[][] inputs, double[] outputs) PointsToInputs()
+        {
+            double[][] inputs = new double[Points.Count][];
+            double[] outputs = new double[Points.Count];
+
+            for (int i = 0; i < Points.Count; i++)//RIP Phish
+            {
+                inputs[i] = new double[] { Points[i].X };
+                outputs[i] = Points[i].Y;
+            }
+
+            return (inputs, outputs);
         }
 
         public void mutate()
