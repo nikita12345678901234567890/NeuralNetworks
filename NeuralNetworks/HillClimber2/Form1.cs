@@ -88,6 +88,7 @@ namespace HillClimber2
             this.Controls.Add(yBox);
 
             drawStuff();
+            perceptron = new Perceptron.Perceptron(Points.Count, 0, 1000, 1);
         }
 
         private void XBox_TextChanged(object s, EventArgs e)
@@ -182,15 +183,6 @@ namespace HillClimber2
 
         private async void GenerateButton_Click(object sender, EventArgs e)
         {
-            var Phish = PointsToInputs();//Phish is BACK!!!!!
-            double error = 0;
-            perceptron.TrainWithHillClimbing(Phish.inputs, Phish.outputs, ref error);
-
-            m = perceptron.weights[0];
-            b = perceptron.bias;
-
-            drawStuff(); //don't make a double[] of 0;
-            /*
             for (int i = 0; i < 10000; i++)
             {
                 mutate();
@@ -201,7 +193,6 @@ namespace HillClimber2
                     drawStuff();
                 }
             }
-            */
         }
 
         public (double[][] inputs, double[] outputs) PointsToInputs()

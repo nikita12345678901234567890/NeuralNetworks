@@ -77,7 +77,5 @@ namespace Perceptron
                                           0, 0, 0, 1 };
             return (inputs, outputs);
         }
-
-        //do perceptron line of best fit and normalise it.
     }
 }
