@@ -10,7 +10,7 @@ namespace Perceptron
         static void Main(string[] args)
         {
             (double[][] inputs, double[] outputs) = OrAndInOuts();
-            Perceptron perceptron = new Perceptron(inputs[0].Length, -1, 1, 0.1);
+            Perceptron perceptron = new Perceptron(inputs[0].Length, -1, 1, 0.1, ErrorFunctions.MSE, ActivationFunctions.GateFilter);
 
             double currentError = perceptron.GetError(inputs, outputs);
             bool debug = true;
@@ -24,7 +24,7 @@ namespace Perceptron
                     {
                         Console.Write("Inputs: ");
                         Console.Write(string.Join(", ", inputs[i]));
-                        Console.Write(" Output: " + Math.Round(perceptron.Compute(inputs[i]), 3));
+                        Console.Write(" Output: " + Math.Round(perceptron.ComputeWithoutActivation(inputs[i]), 3));
                         Console.WriteLine();
                     }
                     Console.WriteLine("Error: " + Math.Round(currentError, 3));
@@ -47,7 +47,7 @@ namespace Perceptron
                     Console.Write(inputs[i][j]);
                 }
 
-                int ans = (int)Math.Round(perceptron.Compute(inputs[i]));
+                var ans = perceptron.Compute(inputs[i]);
                 Console.Write($" Output: {ans}");
                 Console.WriteLine();
             }
