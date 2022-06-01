@@ -12,10 +12,9 @@ namespace Perceptron
             (double[][] inputs, double[] outputs) = OrAndInOuts();
             Perceptron perceptron = new Perceptron(inputs[0].Length, -1, 1, 0.1, ErrorFunctions.MSE, ActivationFunctions.GateFilter);
 
-            double currentError = perceptron.GetError(inputs, outputs);
             bool debug = true;
 
-            for (int x = 0; x < 20000 && currentError > 0; x++)
+            for (int x = 0; x < 10000; x++)
             {
                 if(debug)
                 {
@@ -27,10 +26,10 @@ namespace Perceptron
                         Console.Write(" Output: " + Math.Round(perceptron.ComputeWithoutActivation(inputs[i]), 3));
                         Console.WriteLine();
                     }
-                    Console.WriteLine("Error: " + Math.Round(currentError, 3));
+                    Console.WriteLine("Error: " + Math.Round(perceptron.GetError(inputs, outputs), 3));
                 }
 
-                perceptron.TrainWithHillClimbing(inputs, outputs, ref currentError);
+                perceptron.Train(inputs, outputs, 0.01);
             }
 
             Console.WriteLine("---------------------------------------");

@@ -114,7 +114,7 @@ namespace Perceptron
             double changeInBiasValue = learningRate * -biasDerivative;
             bias += changeInBiasValue;
         }
-        //TEST THIS!!!
+        
         public double Train(double[][] inputs, double[] desiredOutputs, double learningRate)/*batch trains the perceptron using gradient descent for one iteration and returns the error */
         {
             for (int i = 0; i < inputs.Length; i++)
