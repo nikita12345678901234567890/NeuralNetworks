@@ -12,7 +12,9 @@ namespace NeuralNetwork
 
         public Dendrite(Neuron previous, Neuron next, double weight)
         {
-
+            Previous = previous;
+            Next = next;
+            Weight = weight;
         }
 
         public double Compute()
