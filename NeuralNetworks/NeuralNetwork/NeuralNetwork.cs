@@ -6,8 +6,8 @@ namespace NeuralNetwork
 {
     public class NeuralNetwork
     {
-        Layer[] Layers;
-        ErrorFunction Error;
+        public Layer[] Layers;
+        public ErrorFunction Error;
 
         public NeuralNetwork(ActivationFunction activation, ErrorFunction error, params int[] neuronsPerLayer)
         {
