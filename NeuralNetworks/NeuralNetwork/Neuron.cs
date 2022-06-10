@@ -24,6 +24,7 @@ namespace NeuralNetwork
                 dendrites[i] = new Dendrite(previousNerons[i], this, 1);
             }
 
+
             Activation = activation;
         }
 
@@ -54,6 +55,14 @@ namespace NeuralNetwork
 
             Output = Activation.Function(Input);
             return Output;
+        }
+
+        public void setWeights(Dendrite[] Dendrites)
+        {
+            for (int i = 0; i < dendrites.Length; i++)
+            {
+                dendrites[i].Weight = Dendrites[i].Weight;
+            }
         }
     }
 }

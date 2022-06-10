@@ -15,6 +15,31 @@ namespace NetworkTester
 {
     public partial class Form1 : Form
     {
+        NeuralNetwork.NeuralNetwork[] population = new NeuralNetwork.NeuralNetwork[10];
+        public Form1()
+        {
+            for(int i = 0; i < population.Length; i++)
+            {
+                population[i] = new NeuralNetwork.NeuralNetwork(Perceptron.ActivationFunctions.BinaryStep, Perceptron.ErrorFunctions.MSE, 2, 4, 1);
+            }
+            InitializeComponent();
+        }
+
+
+        public void Phish()
+        {
+            for (int i = 0; i < population.Length; i++)
+            {
+                int distance = pipeTop.Left < pipeBottom.Left ? pipeTop.Left : pipeBottom.Left;
+                distance -= flappyBird.Right;
+                int heightDistance = this.Height / 2 - (flappyBird.Location.Y - flappyBird.Height / 2);
+
+                var result = population[i].Compute(new double[] {distance, heightDistance})[0];
+
+                if()
+            }
+        }
+
         #region flappy
         // stolen from MOO ICT Flappy Bird Tutorial
 
@@ -24,10 +49,6 @@ namespace NetworkTester
         int gravity = gravityConst;
         int score = 0;
 
-        public Form1()
-        {
-            InitializeComponent();
-        }
 
         private void gamekeyisdown(object sender, KeyEventArgs e)
         {
@@ -95,15 +116,11 @@ namespace NetworkTester
                 endGame();
             }
 
-
-            // if score is greater then 5 then we will increase the pipe speed to 15
-            if (score > 5)
-            {
-                pipeSpeed = 15;
-            }
-
         }
         #endregion
+
+
+
         public void Mutate(NeuralNetwork.NeuralNetwork net, Random random, double mutationRate)
         {
             foreach (Layer layer in net.Layers)
@@ -117,11 +134,11 @@ namespace NetworkTester
                         {
                             if (random.Next(2) == 0)
                             {
-                                neuron.Weights[i] *= random.NextDouble(0.5, 1.5); //scale weight
+                                neuron.dendrites[i].Weight *= random.NextDouble(0.5, 1.5); //scale weight
                             }
-                            else//make a weights
+                            else
                             {
-                                neuron.Weights[i] *= -1; //flip sign
+                                neuron.dendrites[i].Weight *= -1; //flip sign
                             }
                         }
                     }
@@ -162,13 +179,13 @@ namespace NetworkTester
                     Neuron childNeuron = childLayer.Neurons[j];
 
                     //Copy the winners Weights and Bias into the loser/child neuron
-                    winNeuron.Weights.CopyTo(childNeuron.Weights, 0);
-                    childNeuron.Bias = winNeuron.Bias;
+                    winNeuron.setWeights(childNeuron.dendrites);
+                    childNeuron.bias = winNeuron.bias;
                 }
             }
         }
 
-        public void Train((NeuralNetwork.NeuralNetwork net, double fitness)[] population, Random random, double mutationRate)
+        public void Train((NeuralNetwork.NeuralNetwork net, double fitness)[] population, Random random, double mutationRate, double min, double max)
         {
             Array.Sort(population, (a, b) => b.fitness.CompareTo(a.fitness));
 
@@ -185,8 +202,8 @@ namespace NetworkTester
             //Removes the worst performing networks
             for (int i = end; i < population.Length; i++)
             {
-                population[i].net.Randomize(random);
+                population[i].net.Randomize(random, min, max);
             }
-        }z
+        }
     }
 }

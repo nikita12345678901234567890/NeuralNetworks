@@ -45,6 +45,7 @@ namespace NetworkTester
             // gameTimer
             // 
             this.gameTimer.Enabled = true;
+            this.gameTimer.Interval = 17;
             this.gameTimer.Tick += new System.EventHandler(this.gameTimerEvent);
             // 
             // ground
