@@ -15,7 +15,7 @@ namespace NeuralNetwork
 
             for (int i = 0; i < neuronsPerLayer.Length; i++)
             {
-                Layers[i] = new Layer(activation, neuronsPerLayer[i], i == 0 ? Layers[i - 1] : null);
+                Layers[i] = new Layer(activation, neuronsPerLayer[i], i == 0 ? null : Layers[i - 1]);
             }
 
             Error = error;

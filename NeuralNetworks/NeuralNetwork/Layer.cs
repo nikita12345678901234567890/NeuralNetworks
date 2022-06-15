@@ -16,9 +16,16 @@ namespace NeuralNetwork
             Neurons = new Neuron[neuronCount];
             Outputs = new double[neuronCount];
 
-            for (int i = 0; i < neuronCount && previousLayer != null; i++)
+            for (int i = 0; i < neuronCount; i++)
             {
-                Neurons[i] = new Neuron(activation, previousLayer.Neurons);
+                if (previousLayer != null)
+                {
+                    Neurons[i] = new Neuron(activation, previousLayer.Neurons);
+                }
+                else
+                {
+                    Neurons[i] = new Neuron(activation);
+                }
             }
         }
 
@@ -42,9 +49,12 @@ namespace NeuralNetwork
 
         public double[] Compute(double[] inputs)
         {
-            for (int i = 0; i < Neurons.Length; i++)
+            for (int i = 0; i < inputs.Length; i++)
             {
-                Outputs[i] = Neurons[i].Compute(inputs[i]);
+                for (int j = 0; j < Neurons.Length; j++)
+                {
+                    Outputs[j] = Neurons[j].Compute(inputs[i]);
+                }
             }
 
             return Outputs;

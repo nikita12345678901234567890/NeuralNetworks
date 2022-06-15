@@ -15,12 +15,17 @@ namespace NetworkTester
 {
     public partial class Form1 : Form
     {
-        NeuralNetwork.NeuralNetwork[] population = new NeuralNetwork.NeuralNetwork[10];
+        Random random = new Random();
+        (NeuralNetwork.NeuralNetwork network, double fitness)[] population = new (NeuralNetwork.NeuralNetwork, double)[10];
+
+        int loopCount = 0;
+        int networkNumber = 0;
+
         public Form1()
         {
             for(int i = 0; i < population.Length; i++)
             {
-                population[i] = new NeuralNetwork.NeuralNetwork(Perceptron.ActivationFunctions.BinaryStep, Perceptron.ErrorFunctions.MSE, 2, 4, 1);
+                population[i].network = new NeuralNetwork.NeuralNetwork(Perceptron.ActivationFunctions.BinaryStep, Perceptron.ErrorFunctions.MSE, 2, 4, 1);
             }
             InitializeComponent();
         }
@@ -28,18 +33,31 @@ namespace NetworkTester
 
         public void Phish()
         {
-            for (int i = 0; i < population.Length; i++)
+            if (playing)
             {
                 int distance = pipeTop.Left < pipeBottom.Left ? pipeTop.Left : pipeBottom.Left;
                 distance -= flappyBird.Right;
                 int heightDistance = this.Height / 2 - (flappyBird.Location.Y - flappyBird.Height / 2);
 
-                var result = population[i].Compute(new double[] {distance, heightDistance})[0];
+                var result = population[networkNumber].network.Compute(new double[] { distance, heightDistance })[0];
 
-                if()
+                if (result < 0.5) glide();
+                else flap();
+            }
+            else
+            {
+                population[networkNumber].fitness = score;
+                networkNumber++;
+
+                if (networkNumber >= population.Length)
+                {
+                    Train(population, random, 1, -1, 1);
+                    loopCount++;
+                }
             }
         }
 
+        
         #region flappy
         // stolen from MOO ICT Flappy Bird Tutorial
 
@@ -48,6 +66,7 @@ namespace NetworkTester
         const int jumpConst = 50;
         int gravity = gravityConst;
         int score = 0;
+        bool playing = true;
 
 
         private void gamekeyisdown(object sender, KeyEventArgs e)
@@ -75,15 +94,16 @@ namespace NetworkTester
             gravity = gravityConst;
         }
 
+        //start game again;
         private void endGame()
         {
-            // this is the game end function, this function will when the bird touches the ground or the pipes
-            gameTimer.Stop(); // stop the main timer
-            scoreText.Text += " Game over!!!"; // show the game over text on the score text, += is used to add the new string of text next to the score instead of overriding it
+            playing = false;
         }
 
         private void gameTimerEvent(object sender, EventArgs e)
         {
+            Phish();
+
             flappyBird.Top += gravity; // link the flappy bird picture box to the gravity, += means it will add the speed of gravity to the picture boxes top location so it will move down
             pipeBottom.Left -= pipeSpeed; // link the bottom pipes left position to the pipe speed integer, it will reduce the pipe speed value from the left position of the pipe picture box so it will move left with each tick
             pipeTop.Left -= pipeSpeed; // the same is happening with the top pipe, reduce the value of pipe speed integer from the left position of the pipe using the -= sign
@@ -118,7 +138,6 @@ namespace NetworkTester
 
         }
         #endregion
-
 
 
         public void Mutate(NeuralNetwork.NeuralNetwork net, Random random, double mutationRate)

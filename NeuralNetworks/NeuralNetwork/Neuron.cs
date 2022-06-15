@@ -28,6 +28,11 @@ namespace NeuralNetwork
             Activation = activation;
         }
 
+        public Neuron(ActivationFunction activation)
+        {
+            Activation = activation;
+        }
+
         public void Randomize(Random random, double min, double max)
         {
             for (int i = 0; i < dendrites.Length; i++)
