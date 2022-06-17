@@ -32,12 +32,10 @@ namespace NetworkTester
             this.components = new System.ComponentModel.Container();
             this.gameTimer = new System.Windows.Forms.Timer(this.components);
             this.ground = new System.Windows.Forms.PictureBox();
-            this.flappyBird = new System.Windows.Forms.PictureBox();
             this.pipeTop = new System.Windows.Forms.PictureBox();
             this.pipeBottom = new System.Windows.Forms.PictureBox();
             this.scoreText = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.ground)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.flappyBird)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pipeTop)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pipeBottom)).BeginInit();
             this.SuspendLayout();
@@ -58,20 +56,10 @@ namespace NetworkTester
             this.ground.TabIndex = 0;
             this.ground.TabStop = false;
             // 
-            // flappyBird
-            // 
-            this.flappyBird.Image = global::NetworkTester.Properties.Resources.flappyBird;
-            this.flappyBird.Location = new System.Drawing.Point(249, 289);
-            this.flappyBird.Name = "flappyBird";
-            this.flappyBird.Size = new System.Drawing.Size(100, 50);
-            this.flappyBird.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.flappyBird.TabIndex = 1;
-            this.flappyBird.TabStop = false;
-            // 
             // pipeTop
             // 
             this.pipeTop.Image = global::NetworkTester.Properties.Resources.pipeTop;
-            this.pipeTop.Location = new System.Drawing.Point(514, 12);
+            this.pipeTop.Location = new System.Drawing.Point(525, 12);
             this.pipeTop.Name = "pipeTop";
             this.pipeTop.Size = new System.Drawing.Size(100, 156);
             this.pipeTop.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -81,7 +69,7 @@ namespace NetworkTester
             // pipeBottom
             // 
             this.pipeBottom.Image = global::NetworkTester.Properties.Resources.pipeBottom;
-            this.pipeBottom.Location = new System.Drawing.Point(514, 554);
+            this.pipeBottom.Location = new System.Drawing.Point(525, 554);
             this.pipeBottom.Name = "pipeBottom";
             this.pipeBottom.Size = new System.Drawing.Size(100, 184);
             this.pipeBottom.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -106,14 +94,12 @@ namespace NetworkTester
             this.Controls.Add(this.scoreText);
             this.Controls.Add(this.pipeBottom);
             this.Controls.Add(this.pipeTop);
-            this.Controls.Add(this.flappyBird);
             this.Controls.Add(this.ground);
             this.Name = "Form1";
             this.Text = "Form1";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.gamekeyisdown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.gamekeyisup);
             ((System.ComponentModel.ISupportInitialize)(this.ground)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.flappyBird)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pipeTop)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pipeBottom)).EndInit();
             this.ResumeLayout(false);
@@ -125,7 +111,6 @@ namespace NetworkTester
 
         private System.Windows.Forms.Timer gameTimer;
         private System.Windows.Forms.PictureBox ground;
-        private System.Windows.Forms.PictureBox flappyBird;
         private System.Windows.Forms.PictureBox pipeTop;
         private System.Windows.Forms.PictureBox pipeBottom;
         private System.Windows.Forms.Label scoreText;

@@ -31,12 +31,12 @@ namespace NeuralNetwork
 
         public double[] Compute(double[] inputs)
         {
-            for (int i = 0; i < Layers.Length; i++)
+            for (int i = 0; i < Layers.Length - 1; i++)
             {
                 Layers[i].Compute(inputs);
             }
 
-            return Layers[Layers.Length - 1].Outputs;
+            return Layers[Layers.Length - 1].Compute();
         }
 
         public double GetError(double[] inputs, double[] desiredOutputs)

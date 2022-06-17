@@ -10,50 +10,78 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NetworkTester.Properties;
 
 namespace NetworkTester
 {
     public partial class Form1 : Form
     {
-        Random random = new Random();
-        (NeuralNetwork.NeuralNetwork network, double fitness)[] population = new (NeuralNetwork.NeuralNetwork, double)[10];
+        const int number = 10;
 
-        int loopCount = 0;
-        int networkNumber = 0;
+        Random random = new Random();
+        (NeuralNetwork.NeuralNetwork network, double fitness)[] population = new (NeuralNetwork.NeuralNetwork, double)[number];
+
+        struct game
+        {
+            public bool playing;
+            public int score;
+            public PictureBox birb;
+        }
+
+        game[] games = new game[number];
 
         public Form1()
         {
-            for(int i = 0; i < population.Length; i++)
+            for(int i = 0; i < number; i++)
             {
-                population[i].network = new NeuralNetwork.NeuralNetwork(Perceptron.ActivationFunctions.BinaryStep, Perceptron.ErrorFunctions.MSE, 2, 4, 1);
+                population[i].network = new NeuralNetwork.NeuralNetwork(Perceptron.ActivationFunctions.Identity, Perceptron.ErrorFunctions.MSE, 2, 4, 1);
+                games[i].birb = new PictureBox();
+                games[i].birb.Image = Resources.flappyBird;
+                games[i].birb.Visible = true;
+                games[i].score = 0;
             }
             InitializeComponent();
         }
 
-
+        //Make the birb visible;
         public void Phish()
         {
-            if (playing)
+            bool done = true;
+            for (int i = 0; i < number; i++)
             {
-                int distance = pipeTop.Left < pipeBottom.Left ? pipeTop.Left : pipeBottom.Left;
-                distance -= flappyBird.Right;
-                int heightDistance = this.Height / 2 - (flappyBird.Location.Y - flappyBird.Height / 2);
-
-                var result = population[networkNumber].network.Compute(new double[] { distance, heightDistance })[0];
-
-                if (result < 0.5) glide();
-                else flap();
-            }
-            else
-            {
-                population[networkNumber].fitness = score;
-                networkNumber++;
-
-                if (networkNumber >= population.Length)
+                if (games[i].playing)
                 {
-                    Train(population, random, 1, -1, 1);
-                    loopCount++;
+                    done = false;
+
+                    int distance = pipeTop.Left < pipeBottom.Left ? pipeTop.Left : pipeBottom.Left;
+                    distance -= games[i].birb.Right;
+                    int heightDistance = this.Height / 2 - (games[i].birb.Location.Y - games[i].birb.Height / 2);
+
+                    double result = population[i].network.Compute(new double[] { distance, heightDistance })[0];
+
+                    if (result < 25) glide();
+                    else flap();
                 }
+            }
+            
+            if(done)
+            {
+                StopGame();
+                for (int i = 0; i < number; i++)
+                {
+                    population[i].fitness = games[i].score;
+
+                    games[i].birb.Top = 300;
+                    games[i].score = 0;
+                    games[i].playing = true;
+                }
+
+                Train(population, random, 0.1, -1, 1);
+
+                pipeTop.Left = 525;
+                pipeBottom.Left = 525;
+
+                StartGame();
             }
         }
 
@@ -65,9 +93,15 @@ namespace NetworkTester
         const int gravityConst = 5;
         const int jumpConst = 50;
         int gravity = gravityConst;
-        int score = 0;
-        bool playing = true;
 
+        public void StopGame()
+        {
+            gameTimer.Stop();
+        }
+        public void StartGame()
+        {
+            gameTimer.Start();
+        }
 
         private void gamekeyisdown(object sender, KeyEventArgs e)
         {
@@ -93,49 +127,49 @@ namespace NetworkTester
         {
             gravity = gravityConst;
         }
-
-        //start game again;
-        private void endGame()
-        {
-            playing = false;
-        }
-
+        
         private void gameTimerEvent(object sender, EventArgs e)
         {
             Phish();
 
-            flappyBird.Top += gravity; // link the flappy bird picture box to the gravity, += means it will add the speed of gravity to the picture boxes top location so it will move down
-            pipeBottom.Left -= pipeSpeed; // link the bottom pipes left position to the pipe speed integer, it will reduce the pipe speed value from the left position of the pipe picture box so it will move left with each tick
-            pipeTop.Left -= pipeSpeed; // the same is happening with the top pipe, reduce the value of pipe speed integer from the left position of the pipe using the -= sign
-            scoreText.Text = "Score: " + score; // show the current score on the score text label
-
-            // below we are checking if any of the pipes have left the screen
-
-            if (pipeBottom.Left < -150)
+            for (int i = 0; i < number; i++)
             {
-                // if the bottom pipes location is -150 then we will reset it back to 800 and add 1 to the score
-                pipeBottom.Left = 800;
-                score++;
-            }
-            if (pipeTop.Left < -180)
-            {
-                // if the top pipe location is -180 then we will reset the pipe back to the 950 and add 1 to the score
-                pipeTop.Left = 950;
-                score++;
+                if (games[i].playing)
+                {
+                    games[i].birb.Top += gravity; // link the flappy bird picture box to the gravity, += means it will add the speed of gravity to the picture boxes top location so it will move down
+                    scoreText.Text = "Score: " + games[i].score; // show the current score on the score text label
+
+                    // below we are checking if any of the pipes have left the screen
+
+                    if (pipeBottom.Left < -150)
+                    {
+                        // if the bottom pipes location is -150 then we will reset it back to 800 and add 1 to the score
+                        pipeBottom.Left = 800;
+                        games[i].score++;
+                    }
+                    if (pipeTop.Left < -180)
+                    {
+                        // if the top pipe location is -180 then we will reset the pipe back to the 950 and add 1 to the score
+                        pipeTop.Left = 950;
+                        games[i].score++;
+                    }
+
+                    // the if statement below is checking if the pipe hit the ground, pipes or if the player has left the screen from the top
+                    // the two pipe symbols stand for OR inside of an if statement so we can have multiple conditions inside of this if statement because its all going to do the same thing
+
+                    if (games[i].birb.Bounds.IntersectsWith(pipeBottom.Bounds) ||
+                        games[i].birb.Bounds.IntersectsWith(pipeTop.Bounds) ||
+                        games[i].birb.Bounds.IntersectsWith(ground.Bounds) || games[i].birb.Top < -25
+                        )
+                    {
+                        // if any of the conditions are met from above then we will run the end game function
+                        games[i].playing = false;
+                    }
+                }
             }
 
-            // the if statement below is checking if the pipe hit the ground, pipes or if the player has left the screen from the top
-            // the two pipe symbols stand for OR inside of an if statement so we can have multiple conditions inside of this if statement because its all going to do the same thing
-
-            if (flappyBird.Bounds.IntersectsWith(pipeBottom.Bounds) ||
-                flappyBird.Bounds.IntersectsWith(pipeTop.Bounds) ||
-                flappyBird.Bounds.IntersectsWith(ground.Bounds) || flappyBird.Top < -25
-                )
-            {
-                // if any of the conditions are met from above then we will run the end game function
-                endGame();
-            }
-
+            pipeBottom.Left -= pipeSpeed;
+            pipeTop.Left -= pipeSpeed;
         }
         #endregion
 

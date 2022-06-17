@@ -9,12 +9,10 @@ namespace NeuralNetwork
     public class Layer
     {
         public Neuron[] Neurons { get; }
-        public double[] Outputs { get; }
 
         public Layer(ActivationFunction activation, int neuronCount, Layer previousLayer)
         {
             Neurons = new Neuron[neuronCount];
-            Outputs = new double[neuronCount];
 
             for (int i = 0; i < neuronCount; i++)
             {
@@ -39,6 +37,8 @@ namespace NeuralNetwork
 
         public double[] Compute()
         {
+            var Outputs = new double[Neurons.Length];
+
             for (int i = 0; i < Neurons.Length; i++)
             {
                 Outputs[i] = Neurons[i].Compute();
@@ -49,11 +49,20 @@ namespace NeuralNetwork
 
         public double[] Compute(double[] inputs)
         {
-            for (int i = 0; i < inputs.Length; i++)
+            var Outputs = new double[Neurons.Length];
+
+            if (Neurons[0].dendrites.Length == 0)
             {
-                for (int j = 0; j < Neurons.Length; j++)
+                for (int i = 0; i < inputs.Length; i++)
                 {
-                    Outputs[j] = Neurons[j].Compute(inputs[i]);
+                    Outputs[i] = Neurons[i].Compute(inputs[i]);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < Neurons.Length; i++)
+                {
+                    Outputs[i] = Neurons[i].Compute();
                 }
             }
 

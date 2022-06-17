@@ -30,6 +30,8 @@ namespace NeuralNetwork
 
         public Neuron(ActivationFunction activation)
         {
+            dendrites = new Dendrite[0];
+
             Activation = activation;
         }
 
