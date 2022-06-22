@@ -16,7 +16,7 @@ namespace NetworkTester
 {
     public partial class Form1 : Form
     {
-        const int number = 10;
+        const int number = 300;
 
         Random random = new Random();
         (NeuralNetwork.NeuralNetwork network, double fitness)[] population = new (NeuralNetwork.NeuralNetwork, double)[number];
@@ -32,6 +32,7 @@ namespace NetworkTester
 
         public Form1()
         {
+            InitializeComponent();
             for(int i = 0; i < number; i++)
             {
                 population[i].network = new NeuralNetwork.NeuralNetwork(Perceptron.ActivationFunctions.Identity, Perceptron.ErrorFunctions.MSE, 2, 4, 1);
@@ -39,11 +40,11 @@ namespace NetworkTester
                 games[i].birb.Image = Resources.flappyBird;
                 games[i].birb.Visible = true;
                 games[i].score = 0;
+                games[i].birb.SizeMode = PictureBoxSizeMode.StretchImage;
+                Controls.Add(games[i].birb);
             }
-            InitializeComponent();
         }
 
-        //Make the birb visible;
         public void Phish()
         {
             bool done = true;
@@ -127,8 +128,16 @@ namespace NetworkTester
         {
             gravity = gravityConst;
         }
-        
+
         private void gameTimerEvent(object sender, EventArgs e)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                update();
+            }
+        }
+        
+        public void update()
         {
             Phish();
 
