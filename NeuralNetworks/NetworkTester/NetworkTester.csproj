@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Flappy\Flappy.csproj" />
     <ProjectReference Include="..\NeuralNetwork\NeuralNetwork.csproj" />
     <ProjectReference Include="..\Perceptron\Perceptron.csproj" />
   </ItemGroup>
