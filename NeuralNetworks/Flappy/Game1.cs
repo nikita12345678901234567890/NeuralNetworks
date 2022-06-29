@@ -16,17 +16,16 @@ namespace Flappy
         private SpriteBatch spriteBatch;
         public Texture2D pixel;
 
-        int pipeSpeed = 20;
-        const int gravityConst = 5;
-        const int jumpConst = 50;
-        int gravity = gravityConst;
+        int pipeSpeed = 15;
+        const int gravity = 5;
+        const int jumpConst = 150;
 
-        const int number = 300;
+        const int number = 10;
 
         Random random = new Random();
         (NeuralNetwork.NeuralNetwork network, double fitness)[] population = new (NeuralNetwork.NeuralNetwork, double)[number];
 
-        struct game
+        public struct game
         {
             public bool playing;
             public int score;
@@ -38,12 +37,17 @@ namespace Flappy
 
         game[] games = new game[number];
 
+        const bool testing = false;
+        bool testPlaying = true;
+        game testGame;
+        KeyboardState keyState = new KeyboardState();
+        KeyboardState prevState = new KeyboardState();
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-
         }
 
         protected override void Initialize()
@@ -51,16 +55,17 @@ namespace Flappy
             pipeTop.X = 525;
             pipeTop.Y = 0;
             pipeTop.Width = 50;
-            pipeTop.Height = 300;
+            pipeTop.Height = 250;
 
             pipeBottom.X = 525;
-            pipeBottom.Y = 500;
+            pipeBottom.Y = 550;
             pipeBottom.Width = 50;
-            pipeBottom.Height = 300;
+            pipeBottom.Height = 250;
 
             for (int i = 0; i < number; i++)
             {
-                population[i].network = new NeuralNetwork.NeuralNetwork(Perceptron.ActivationFunctions.Identity, Perceptron.ErrorFunctions.MSE, 2, 4, 1);
+                population[i].network = new NeuralNetwork.NeuralNetwork(Perceptron.ActivationFunctions.Sigmoid, Perceptron.ErrorFunctions.MSE, 2, 4, 1);
+                population[i].network.Randomize(random, -1, 1);
                 games[i].birb = new Rectangle();
                 games[i].birb.X = 250;
                 games[i].birb.Y = 400;
@@ -74,6 +79,14 @@ namespace Flappy
             graphics.PreferredBackBufferHeight = 800;
             graphics.ApplyChanges();
 
+            testGame.birb = new Rectangle();
+            testGame.birb.X = 250;
+            testGame.birb.Y = 400;
+            testGame.birb.Width = 50;
+            testGame.birb.Height = 50;
+            testGame.score = 0;
+            testGame.playing = true;
+
             base.Initialize();
         }
 
@@ -85,55 +98,9 @@ namespace Flappy
             pixel.SetData(new Color[] { Color.White });
         }
 
-        public void flap()
+        public void flap(ref game game)
         {
-            gravity = -jumpConst;
-        }
-        public void glide()
-        {
-            gravity = gravityConst;
-        }
-
-        public void update()
-        {
-            Phish();
-
-            for (int i = 0; i < number; i++)
-            {
-                if (games[i].playing)
-                {
-                    games[i].birb.Y += gravity; // link the flappy bird picture box to the gravity, += means it will add the speed of gravity to the picture boxes top location so it will move down
-
-                    // below we are checking if any of the pipes have left the screen
-
-                    if (pipeBottom.X < -150)
-                    {
-                        // if the bottom pipes location is -150 then we will reset it back to 800 and add 1 to the score
-                        pipeBottom.X = 800;
-                        games[i].score++;
-                    }
-                    if (pipeTop.X < -180)
-                    {
-                        // if the top pipe location is -180 then we will reset the pipe back to the 950 and add 1 to the score
-                        pipeTop.X = 950;
-                        games[i].score++;
-                    }
-
-                    // the if statement below is checking if the pipe hit the ground, pipes or if the player has left the screen from the top
-                    // the two pipe symbols stand for OR inside of an if statement so we can have multiple conditions inside of this if statement because its all going to do the same thing
-
-                    if (games[i].birb.Intersects(pipeBottom) ||
-                        games[i].birb.Intersects(pipeTop) ||
-                        games[i].birb.Bottom > GraphicsDevice.Viewport.Height || games[i].birb.Top < -25
-                        )
-                    {
-                        games[i].playing = false;
-                    }
-                }
-            }
-
-            pipeBottom.X -= pipeSpeed;
-            pipeTop.X -= pipeSpeed;
+            game.birb.Y -= jumpConst;
         }
 
         public void Phish()
@@ -151,8 +118,7 @@ namespace Flappy
 
                     double result = population[i].network.Compute(new double[] { distance, heightDistance })[0];
 
-                    if (result < 25) glide();
-                    else flap();
+                    if (result > 0.5) flap(ref games[i]);
                 }
             }
 
@@ -264,7 +230,86 @@ namespace Flappy
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            update();
+            if (testing)
+            {
+                prevState = keyState;
+                keyState = Keyboard.GetState();
+
+                if (keyState.IsKeyDown(Keys.Space) && prevState.IsKeyUp(Keys.Space)) flap(ref testGame);
+
+                if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+                {
+                    testGame.birb.X = 250;
+                    testGame.birb.Y = 400;
+                    testGame.birb.Width = 50;
+                    testGame.birb.Height = 50;
+                    testGame.score = 0;
+                    testPlaying = true;
+                }
+
+                if (testPlaying)
+                {
+                    testGame.birb.Y += gravity;
+
+
+                    if (pipeBottom.X < -150)
+                    {
+                        pipeBottom.X = 800;
+                        testGame.score++;
+                    }
+                    if (pipeTop.X < -180)
+                    {
+                        pipeTop.X = 950;
+                        testGame.score++;
+                    }
+
+
+                    if (testGame.birb.Intersects(pipeBottom) ||
+                        testGame.birb.Intersects(pipeTop) ||
+                        testGame.birb.Bottom > GraphicsDevice.Viewport.Height || testGame.birb.Top < -25
+                        )
+                    {
+                        testPlaying = false;
+                    }
+                }
+                prevState = keyState;
+            }
+
+            else
+            { 
+                Phish();
+                for (int i = 0; i < number; i++)
+                {
+                    if (games[i].playing)
+                    {
+                        games[i].birb.Y += gravity;
+
+
+                        if (pipeBottom.X < -150)
+                        {
+                            pipeBottom.X = 800;
+                            games[i].score++;
+                        }
+                        if (pipeTop.X < -180)
+                        {
+                            pipeTop.X = 950;
+                            games[i].score++;
+                        }
+
+
+                        if (games[i].birb.Intersects(pipeBottom) ||
+                            games[i].birb.Intersects(pipeTop) ||
+                            games[i].birb.Bottom > GraphicsDevice.Viewport.Height || games[i].birb.Top < -25
+                            )
+                        {
+                            games[i].playing = false;
+                        }
+                    }
+                }
+            }
+
+            pipeBottom.X -= pipeSpeed;
+            pipeTop.X -= pipeSpeed;
 
             base.Update(gameTime);
         }
@@ -278,9 +323,19 @@ namespace Flappy
             spriteBatch.Draw(pixel, pipeTop, Color.GreenYellow);
             spriteBatch.Draw(pixel, pipeBottom, Color.GreenYellow);
 
-            for (int i = 0; i < number; i++)
+            if (testing)
             {
-                spriteBatch.Draw(pixel, games[i].birb, Color.Chocolate);
+                spriteBatch.Draw(pixel, testGame.birb, Color.Green);
+            }
+            else
+            {
+                for (int i = 0; i < number; i++)
+                {
+                    if (games[i].playing)
+                    {
+                        spriteBatch.Draw(pixel, games[i].birb, Color.Chocolate);
+                    }
+                }
             }
 
             spriteBatch.End();
