@@ -133,7 +133,7 @@ namespace Flappy
                     games[i].playing = true;
                 }
 
-                Train(population, random, 0.1, -1, 1);
+                Train(population, random, 0.25, -1, 1);
 
                 pipeTop.X = 525;
                 pipeBottom.X = 525;
