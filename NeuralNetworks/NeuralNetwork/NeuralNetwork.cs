@@ -1,5 +1,4 @@
 ﻿using Perceptron;
-
 using System;
 
 namespace NeuralNetwork
@@ -9,13 +8,13 @@ namespace NeuralNetwork
         public Layer[] Layers;
         public ErrorFunction Error;
 
-        public NeuralNetwork(ActivationFunction activation, ErrorFunction error, params int[] neuronsPerLayer)
+        public NeuralNetwork(ErrorFunction error, params (int, ActivationFunction)[] neuronsPerLayer)
         {
             Layers = new Layer[neuronsPerLayer.Length];
 
             for (int i = 0; i < neuronsPerLayer.Length; i++)
             {
-                Layers[i] = new Layer(activation, neuronsPerLayer[i], i == 0 ? null : Layers[i - 1]);
+                Layers[i] = new Layer(neuronsPerLayer[i].Item2, neuronsPerLayer[i].Item1, i == 0 ? null : Layers[i - 1]);
             }
 
             Error = error;
@@ -31,9 +30,10 @@ namespace NeuralNetwork
 
         public double[] Compute(double[] inputs)
         {
+            double[] stuff = inputs;
             for (int i = 0; i < Layers.Length - 1; i++)
             {
-                Layers[i].Compute(inputs);
+                stuff = Layers[i].Compute(stuff);
             }
 
             return Layers[Layers.Length - 1].Compute();

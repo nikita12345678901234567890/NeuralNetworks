@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using System.Linq;
 using NeuralNetwork;
 
 using Perceptron;
@@ -20,10 +20,15 @@ namespace Flappy
         const int gravity = 5;
         const int jumpConst = 150;
 
+        int defaultPipeHeight = 250;
+        const int maxShift =150;
+
         const int number = 3000;
 
         public int Generation = 0;
         public int Best = 0;
+        public int Current = 0;
+        public int numberAlive = 0;
 
         Random random = new Random();
         (NeuralNetwork.NeuralNetwork network, double fitness)[] population = new (NeuralNetwork.NeuralNetwork, double)[number];
@@ -51,7 +56,7 @@ namespace Flappy
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            this.TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 300);
+            //this.TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 300);
         }
 
         protected override void Initialize()
@@ -59,16 +64,16 @@ namespace Flappy
             pipeTop.X = 525;
             pipeTop.Y = 0;
             pipeTop.Width = 50;
-            pipeTop.Height = 150;
+            pipeTop.Height = defaultPipeHeight;
 
             pipeBottom.X = 525;
-            pipeBottom.Y = 650;
+            pipeBottom.Y = 800 - defaultPipeHeight;
             pipeBottom.Width = 50;
-            pipeBottom.Height = 150;
+            pipeBottom.Height = defaultPipeHeight;
 
             for (int i = 0; i < number; i++)
             {
-                population[i].network = new NeuralNetwork.NeuralNetwork(Perceptron.ActivationFunctions.BinaryStep, Perceptron.ErrorFunctions.MSE, 2, 4, 1);
+                population[i].network = new NeuralNetwork.NeuralNetwork(Perceptron.ErrorFunctions.MSE, (2, ActivationFunctions.Identity), (4, ActivationFunctions.Identity), (1, ActivationFunctions.BinaryStep));
                 population[i].network.Randomize(random, -1, 1);
                 games[i].birb = new Rectangle();
                 games[i].birb.X = 250;
@@ -110,11 +115,14 @@ namespace Flappy
         public void Phish()
         {
             bool done = true;
+            numberAlive = 0;
+
             for (int i = 0; i < number; i++)
             {
                 if (games[i].playing)
                 {
                     done = false;
+                    numberAlive++;
 
                     int distance = pipeTop.Left < pipeBottom.Left ? pipeTop.Left : pipeBottom.Left;
                     distance -= games[i].birb.Right;
@@ -125,7 +133,7 @@ namespace Flappy
                     if (result > 0.6) flap(ref games[i]);
 
                     population[i].fitness++;
-
+                    Current = (int)population[i].fitness;
                     if (population[i].fitness > Best) Best = (int)population[i].fitness;
                 }
             }
@@ -142,13 +150,17 @@ namespace Flappy
                     games[i].playing = true;
                 }
 
-                Train(population, random, 0.25, -1, 1);
+                Train(population, random, 0.25, -10, 10);
 
                 pipeTop.X = 525;
                 pipeBottom.X = 525;
+
+                pipeTop.Height = defaultPipeHeight;
+                pipeBottom.Y = 800 - defaultPipeHeight;
+                pipeBottom.Height = defaultPipeHeight;
             }
 
-            Window.Title = $"Generation: {Generation}, Best: {Best}";
+            Window.Title = $"Generation: {Generation}, Best: {Best}, Current: {Current}, Alive: {numberAlive}";
         }
 
         public void Mutate(NeuralNetwork.NeuralNetwork net, Random random, double mutationRate)
@@ -220,7 +232,7 @@ namespace Flappy
             Array.Sort(population, (a, b) => b.fitness.CompareTo(a.fitness));
 
             int start = (int)(population.Length * 0.1);
-            int end = (int)(population.Length * 0.6);
+            int end = (int)(population.Length * 0.9);
 
             //Notice that this process is only called on networks in the middle 80% of the array
             for (int i = start; i < end; i++)
@@ -262,15 +274,22 @@ namespace Flappy
                 {
                     testGame.birb.Y += gravity;
 
-
+                    int verticalShift = 0;
                     if (pipeBottom.X < -150)
                     {
+                        verticalShift = random.Next(-maxShift, maxShift);
+                        pipeBottom.Y = (800 - defaultPipeHeight) - verticalShift;
+                        pipeBottom.Height = defaultPipeHeight + verticalShift;
+
                         pipeBottom.X = 800;
+
                         testGame.score++;
                     }
-                    if (pipeTop.X < -180)
+                    if (pipeTop.X < -150)
                     {
-                        pipeTop.X = 950;
+                        pipeTop.Height = defaultPipeHeight + verticalShift;
+
+                        pipeTop.X = 800;
                         testGame.score++;
                     }
 
@@ -295,15 +314,21 @@ namespace Flappy
                     {
                         games[i].birb.Y += gravity;
 
-
+                        int verticalShift = 0;
                         if (pipeBottom.X < -150)
                         {
+                            verticalShift = random.Next(-maxShift, maxShift);
+                            pipeBottom.Y = (800 - defaultPipeHeight) - verticalShift;
+                            pipeBottom.Height = defaultPipeHeight + verticalShift;
+
                             pipeBottom.X = 800;
                             games[i].score++;
                         }
-                        if (pipeTop.X < -180)
+                        if (pipeTop.X < -150)
                         {
-                            pipeTop.X = 950;
+                            pipeTop.Height = defaultPipeHeight - verticalShift;
+
+                            pipeTop.X = 800;
                             games[i].score++;
                         }
 

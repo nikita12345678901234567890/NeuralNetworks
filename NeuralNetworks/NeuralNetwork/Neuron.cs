@@ -46,6 +46,7 @@ namespace NeuralNetwork
 
         public double Compute()
         {
+            Input = 0;
             foreach (var dendrite in dendrites)
             {
                 Input += dendrite.Compute();
