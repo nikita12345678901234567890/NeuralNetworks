@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuralNetwork", "NeuralNetw
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkTester", "NetworkTester\NetworkTester.csproj", "{620F805E-F8FE-48BF-B1B4-9501F6A93FD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flappy", "Flappy\Flappy.csproj", "{4E8619F3-27EF-4E2C-A09A-558FB94EE97B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Flappy", "Flappy\Flappy.csproj", "{4E8619F3-27EF-4E2C-A09A-558FB94EE97B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralNetwork2", "NeuralNetwork2\NeuralNetwork2.csproj", "{80C84C38-170E-4059-BCEC-46E956432F22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -123,6 +125,22 @@ Global
 		{4E8619F3-27EF-4E2C-A09A-558FB94EE97B}.Release|x64.Build.0 = Release|Any CPU
 		{4E8619F3-27EF-4E2C-A09A-558FB94EE97B}.Release|x86.ActiveCfg = Release|Any CPU
 		{4E8619F3-27EF-4E2C-A09A-558FB94EE97B}.Release|x86.Build.0 = Release|Any CPU
+		{80C84C38-170E-4059-BCEC-46E956432F22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80C84C38-170E-4059-BCEC-46E956432F22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80C84C38-170E-4059-BCEC-46E956432F22}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{80C84C38-170E-4059-BCEC-46E956432F22}.Debug|ARM.Build.0 = Debug|Any CPU
+		{80C84C38-170E-4059-BCEC-46E956432F22}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{80C84C38-170E-4059-BCEC-46E956432F22}.Debug|x64.Build.0 = Debug|Any CPU
+		{80C84C38-170E-4059-BCEC-46E956432F22}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{80C84C38-170E-4059-BCEC-46E956432F22}.Debug|x86.Build.0 = Debug|Any CPU
+		{80C84C38-170E-4059-BCEC-46E956432F22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80C84C38-170E-4059-BCEC-46E956432F22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80C84C38-170E-4059-BCEC-46E956432F22}.Release|ARM.ActiveCfg = Release|Any CPU
+		{80C84C38-170E-4059-BCEC-46E956432F22}.Release|ARM.Build.0 = Release|Any CPU
+		{80C84C38-170E-4059-BCEC-46E956432F22}.Release|x64.ActiveCfg = Release|Any CPU
+		{80C84C38-170E-4059-BCEC-46E956432F22}.Release|x64.Build.0 = Release|Any CPU
+		{80C84C38-170E-4059-BCEC-46E956432F22}.Release|x86.ActiveCfg = Release|Any CPU
+		{80C84C38-170E-4059-BCEC-46E956432F22}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
