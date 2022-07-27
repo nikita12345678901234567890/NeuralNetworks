@@ -27,5 +27,10 @@ namespace NeuralNetwork2
         {
             Weight *= WeightUpdate;
         }
+
+        public void Backprop(double learningRate)
+        {
+            
+        }
     }
 }

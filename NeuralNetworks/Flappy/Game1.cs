@@ -201,7 +201,6 @@ namespace Flappy
             }
         }
 
-
         public void Crossover(NeuralNetwork.NeuralNetwork winner, NeuralNetwork.NeuralNetwork loser, Random random)
         {
             for (int i = 0; i < winner.Layers.Length; i++)

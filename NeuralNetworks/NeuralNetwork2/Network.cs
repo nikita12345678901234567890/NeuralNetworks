@@ -60,5 +60,13 @@ namespace NeuralNetwork2
                 layer.ApplyUpdates();
             }
         }
+
+        public void Backprop(double learningRate)
+        {
+            foreach (Layer layer in Layers)
+            {
+                layer.Backprop(learningRate);
+            }
+        }
     }
 }

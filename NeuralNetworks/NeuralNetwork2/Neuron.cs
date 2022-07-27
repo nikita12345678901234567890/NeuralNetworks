@@ -84,5 +84,13 @@ namespace NeuralNetwork2
                 dendrite.ApplyUpdates();
             }
         }
+
+        public void Backprop(double learningRate)
+        {
+            foreach (Dendrite dendrite in dendrites)
+            {
+                dendrite.Backprop(learningRate);
+            }
+        }
     }
 }
