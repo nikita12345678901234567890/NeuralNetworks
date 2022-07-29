@@ -81,6 +81,7 @@ namespace NeuralNetwork2
         {
             foreach (Neuron neuron in Neurons)
             {
+
                 neuron.Backprop(learningRate);
             }
         }

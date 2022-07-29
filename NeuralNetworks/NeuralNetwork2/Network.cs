@@ -61,11 +61,16 @@ namespace NeuralNetwork2
             }
         }
 
-        public void Backprop(double learningRate)
+        public void Backprop(double learningRate, double[] desiredOutputs)
         {
-            foreach (Layer layer in Layers)
+            for (int i = 0; i < Layers[Layers.Length - 1].Neurons.Length; i++)
             {
-                layer.Backprop(learningRate);
+                Layers[Layers.Length - 1].Neurons[i].Delta = Error.Derivative(Layers[Layers.Length - 1].Neurons[i].Output, desiredOutputs[i]);
+            }
+
+            for (int i = Layers.Length - 1; i > 0; i--)
+            {
+                Layers[i].Backprop(learningRate);
             }
         }
     }

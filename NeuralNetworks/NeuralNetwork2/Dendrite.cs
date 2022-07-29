@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Perceptron;
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -25,12 +27,8 @@ namespace NeuralNetwork2
 
         public void ApplyUpdates()
         {
-            Weight *= WeightUpdate;
-        }
-
-        public void Backprop(double learningRate)
-        {
-            
+            Weight += WeightUpdate;
+            WeightUpdate = 0;
         }
     }
 }
