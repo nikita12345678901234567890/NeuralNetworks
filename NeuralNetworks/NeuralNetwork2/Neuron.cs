@@ -93,17 +93,11 @@ namespace NeuralNetwork2
 
         public void Backprop(double learningRate)
         {
-            /*
-            Do this here:
-
-            This function will set all of the neuron's weight updates (bias update and the weight
-            updates in its dendrites). Just like the perceptron it will be using the formula,
-            learningRate * -derivative to adjust the weights.
-            */
-
             for (int i = 0; i < dendrites.Length; i++)
             {
-                dendrites[i].WeightUpdate = learningRate * ErrorFunction.
+                double derivative = Delta * Activation.Derivative(Input) * dendrites[i].Previous.Output;
+
+                dendrites[i].WeightUpdate = learningRate * -derivative;
 
                 dendrites[i].Previous.Delta += Delta * Activation.Derivative(Input) * dendrites[i].Weight;
             }
