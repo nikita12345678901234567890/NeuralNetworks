@@ -84,7 +84,7 @@ namespace NeuralNetwork2
 
         public void ApplyUpdates()
         {
-            bias *= biasUpdate;
+            bias += biasUpdate;
             foreach (Dendrite dendrite in dendrites)
             {
                 dendrite.ApplyUpdates();
@@ -101,6 +101,8 @@ namespace NeuralNetwork2
 
                 dendrites[i].Previous.Delta += Delta * Activation.Derivative(Input) * dendrites[i].Weight;
             }
+
+            biasUpdate = learningRate * -Delta * Activation.Derivative(Input);
         }
     }
 }

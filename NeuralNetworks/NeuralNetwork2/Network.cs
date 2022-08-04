@@ -73,5 +73,20 @@ namespace NeuralNetwork2
                 Layers[i].Backprop(learningRate);
             }
         }
+
+        public double Train(double[][] inputs, double[][] desiredOutputs, double learingRate)
+        {
+            double ErrorSum = 0;
+            for (int i = 0; i < inputs.Length; i++)
+            {
+                ErrorSum += GetError(inputs[i], desiredOutputs[i]);
+
+                Backprop(learingRate, desiredOutputs[i]);
+            }
+
+            ApplyUpdates();
+
+            return ErrorSum / inputs.Length;
+        }
     }
 }

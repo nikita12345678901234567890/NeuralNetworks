@@ -8,31 +8,35 @@ namespace Tester
 {
     class Program
     {
-        Random random = new Random();
+        static Random random = new Random();
 
         static void Main(string[] args)
         {
-            (double[][] inputs, double[] outputs) = OrAndInOuts();
-            Network network = new Network(ErrorFunctions.MSE, (2, ActivationFunctions.Sigmoid), (2, ActivationFunctions.Sigmoid), (1, ActivationFunctions.BinaryStep));
+            (double[][] inputs, double[][] outputs) = AndInOuts();
+            Network network = new Network(ErrorFunctions.MSE, (2, ActivationFunctions.Identity), (2, ActivationFunctions.Sigmoid), (2, ActivationFunctions.Sigmoid), (1, ActivationFunctions.Sigmoid));
 
-            bool debug = true;
+            network.Randomize(random, -1, 1);
 
-            for (int x = 0; x < 100; x++)
+            double error = double.PositiveInfinity;
+
+            for (int x = 0; x < 100000; x++)
             {
-                if (debug)
+                if (x % 1000 == 0)
+                    ;
+
+                Console.SetCursorPosition(0, 0);
+                for (int i = 0; i < inputs.Length; i++)
                 {
-                    Console.SetCursorPosition(0, 0);
-                    for (int i = 0; i < inputs.Length; i++)
-                    {
-                        Console.Write("Inputs: ");
-                        Console.Write(string.Join(", ", inputs[i]));
-                        Console.Write(" Output: " + network.Compute(inputs[i]));
-                        Console.WriteLine();
-                    }
-                    Console.WriteLine("Error: " + Math.Round(network.GetError(inputs[i], outputs), 3));
+                    Console.Write("Inputs: ");
+                    Console.Write(string.Join(", ", inputs[i]));
+                    Console.Write(" Output: " + network.Compute(inputs[i])[0]);
+                    Console.WriteLine();
                 }
 
-                network.
+                error = network.Train(inputs, outputs, 0.01);
+
+                Console.WriteLine("Error: " + error);
+
             }
 
             Console.WriteLine("---------------------------------------");
@@ -49,41 +53,35 @@ namespace Tester
                     Console.Write(inputs[i][j]);
                 }
 
-                var ans = network.Compute(inputs[i]);
-                Console.Write($" Output: {ans}");
+                var ans = network.Compute(inputs[i])[0];
+                Console.Write($" Output: {Math.Round(ans)}");
                 Console.WriteLine();
             }
         }
 
 
 
-        static (double[][] inputs, double[] outputs) AndInOuts()
+        static (double[][] inputs, double[][] outputs) AndInOuts()
         {
             double[][] inputs = new double[][] { new double[] { 0, 0 }, new double[] { 0, 1 }, new double[] { 1, 1 }, new double[] { 1, 0 } };
-            double[] outputs = new double[] { 0, 0, 1, 0 };
+            double[][] outputs = new double[][] { new double[] { 0}, new double[] { 0}, new double[] { 1}, new double[] { 0 } };
             return (inputs, outputs);
         }
 
-        static (double[][] inputs, double[] outputs) OrInOuts()
+        static (double[][] inputs, double[][] outputs) OrInOuts()
         {
             double[][] inputs = new double[][] { new double[] { 0, 0 }, new double[] { 1, 0 }, new double[] { 0, 1 }, new double[] { 1, 1 } };
-            double[] outputs = new double[] { 0, 1, 1, 1 };
+            double[][] outputs = new double[][] { new double[] { 0 }, new double[] { 1 }, new double[] { 1 }, new double[] { 1 } };
             return (inputs, outputs);
         }
 
-        static (double[][] inputs, double[] outputs) OrAndInOuts()
+        static (double[][] inputs, double[][] outputs) OrAndInOuts()
         {
             double[][] inputs = new double[][] { new double[] { 0, 0, 0 }, new double[] { 1, 0, 0 }, new double[] { 0, 1, 0 }, new double[] { 1, 1, 0 },
                                                new double[] { 0, 0, 1 }, new double[] { 1, 0, 1 }, new double[] { 0, 1, 1 }, new double[] { 1, 1, 1 }};
-            double[] outputs = new double[] { 0, 1, 1, 1,
-                                          0, 0, 0, 1 };
+            double[][] outputs = new double[][] { new double[] { 0 }, new double[] { 1 }, new double[] { 1 }, new double[] { 1 },
+                                          new double[] { 0 }, new double[] { 0 }, new double[] { 0 }, new double[] { 1 } };
             return (inputs, outputs);
-        }
-
-
-        public void Train()
-        {
-            
         }
     }
 }
