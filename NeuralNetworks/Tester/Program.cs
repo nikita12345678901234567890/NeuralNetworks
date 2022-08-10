@@ -3,12 +3,13 @@
 using Perceptron;
 
 using System;
+using System.Threading;
 
 namespace Tester
 {
     class Program
     {
-        static Random random = new Random();
+        static Random random = new Random(1);
 
         static void Main(string[] args)
         {
@@ -19,7 +20,7 @@ namespace Tester
 
             double error = double.PositiveInfinity;
 
-            for (int x = 0; x < 100000; x++)
+            for (int x = 0; x < 50000; x++)
             {
                 if (x % 1000 == 0)
                     ;
@@ -33,9 +34,9 @@ namespace Tester
                     Console.WriteLine();
                 }
 
-                error = network.Train(inputs, outputs, 0.01);
-
+                error = network.Train(inputs, outputs, .01);
                 Console.WriteLine("Error: " + error);
+                
 
             }
 

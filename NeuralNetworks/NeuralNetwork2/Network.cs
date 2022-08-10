@@ -79,12 +79,15 @@ namespace NeuralNetwork2
             double ErrorSum = 0;
             for (int i = 0; i < inputs.Length; i++)
             {
-                ErrorSum += GetError(inputs[i], desiredOutputs[i]);
+                var tempError = GetError(inputs[i], desiredOutputs[i]);
+                ErrorSum += tempError;
+                Console.WriteLine(tempError);
 
                 Backprop(learingRate, desiredOutputs[i]);
+                ApplyUpdates();
             }
 
-            ApplyUpdates();
+         
 
             return ErrorSum / inputs.Length;
         }
