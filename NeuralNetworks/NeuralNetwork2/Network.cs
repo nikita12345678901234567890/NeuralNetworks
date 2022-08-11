@@ -81,7 +81,6 @@ namespace NeuralNetwork2
             {
                 var tempError = GetError(inputs[i], desiredOutputs[i]);
                 ErrorSum += tempError;
-                Console.WriteLine(tempError);
 
                 Backprop(learingRate, desiredOutputs[i]);
                 ApplyUpdates();

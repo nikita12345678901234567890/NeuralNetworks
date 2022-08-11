@@ -34,7 +34,8 @@ namespace HillClimber2
             Coordinates = new List<(TextBox xBox, TextBox yBox)>();
             Points = new List<Point>();
 
-            perceptron = new Perceptron.Perceptron(Points.Count, 0, 1000, 1);
+            throw new Exception("Hmm...");
+            //perceptron = new Perceptron.Perceptron(amountOfInputs: Points.Count, min: 0, max: 1000, 1);
 
             canvas = new Bitmap(pictureBox1.Size.Width, pictureBox1.Height);
             g = Graphics.FromImage(canvas);
@@ -88,7 +89,8 @@ namespace HillClimber2
             this.Controls.Add(yBox);
 
             drawStuff();
-            perceptron = new Perceptron.Perceptron(Points.Count, 0, 1000, 1);
+            //perceptron = new Perceptron.Perceptron(Points.Count, 0, 1000, 1);
+            throw new Exception("Hmm..");
         }
 
         private void XBox_TextChanged(object s, EventArgs e)

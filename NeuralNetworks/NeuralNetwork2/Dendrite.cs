@@ -24,7 +24,7 @@ namespace NeuralNetwork2
         {
             return Previous.Output * Weight;
         }
-
+        
         public void ApplyUpdates()
         {
             Weight += WeightUpdate;

@@ -13,31 +13,30 @@ namespace Tester
 
         static void Main(string[] args)
         {
-            (double[][] inputs, double[][] outputs) = AndInOuts();
-            Network network = new Network(ErrorFunctions.MSE, (2, ActivationFunctions.Identity), (2, ActivationFunctions.Sigmoid), (2, ActivationFunctions.Sigmoid), (1, ActivationFunctions.Sigmoid));
+            (double[][] inputs, double[][] outputs) = SinInOuts();
+            Network network = new Network(ErrorFunctions.MSE, (1, ActivationFunctions.Identity), (10, ActivationFunctions.TanH), (10, ActivationFunctions.TanH), (10, ActivationFunctions.TanH), (1, ActivationFunctions.TanH));
 
             network.Randomize(random, -1, 1);
 
             double error = double.PositiveInfinity;
 
-            for (int x = 0; x < 50000; x++)
+            for (int x = 0; x < 100000; x++)
             {
-                if (x % 1000 == 0)
-                    ;
-
-                Console.SetCursorPosition(0, 0);
-                for (int i = 0; i < inputs.Length; i++)
-                {
-                    Console.Write("Inputs: ");
-                    Console.Write(string.Join(", ", inputs[i]));
-                    Console.Write(" Output: " + network.Compute(inputs[i])[0]);
-                    Console.WriteLine();
-                }
-
                 error = network.Train(inputs, outputs, .01);
-                Console.WriteLine("Error: " + error);
-                
+                if (true)//x % 10000 == 0)
+                {
+                    Console.SetCursorPosition(0, 0);
+                    for (int i = 0; i < inputs.Length; i++)
+                    {
+                        Console.Write("Inputs: ");
+                        Console.Write(string.Join(", ", inputs[i]));
+                        Console.Write(" \tTarget: " + outputs[i][0]);
+                        Console.Write(" \tOutput: " + network.Compute(inputs[i])[0]);
+                        Console.WriteLine();
+                    }
 
+                    Console.WriteLine("Error: " + error);
+                }
             }
 
             Console.WriteLine("---------------------------------------");
@@ -76,12 +75,27 @@ namespace Tester
             return (inputs, outputs);
         }
 
-        static (double[][] inputs, double[][] outputs) OrAndInOuts()
+        static (double[][] inputs, double[][] outputs) XorInOuts()
         {
-            double[][] inputs = new double[][] { new double[] { 0, 0, 0 }, new double[] { 1, 0, 0 }, new double[] { 0, 1, 0 }, new double[] { 1, 1, 0 },
-                                               new double[] { 0, 0, 1 }, new double[] { 1, 0, 1 }, new double[] { 0, 1, 1 }, new double[] { 1, 1, 1 }};
-            double[][] outputs = new double[][] { new double[] { 0 }, new double[] { 1 }, new double[] { 1 }, new double[] { 1 },
-                                          new double[] { 0 }, new double[] { 0 }, new double[] { 0 }, new double[] { 1 } };
+            double[][] inputs = new double[][] { new double[] { 0, 0 }, new double[] { 0, 1 }, new double[] { 1, 1 }, new double[] { 1, 0 } };
+            double[][] outputs = new double[][] { new double[] { 0 }, new double[] { 1 }, new double[] { 0 }, new double[] { 1 } };
+            return (inputs, outputs);
+        }
+
+        static (double[][] inputs, double[][] outputs) SinInOuts()
+        {
+            double[][] inputs = new double[24][];
+            for (int i = 0; i < 24; i++)
+            {
+                inputs[i] = new double[] { (Math.PI / 12) * i };
+            }
+
+            double[][] outputs = new double[24][];
+            for (int i = 0; i < 24; i++)
+            {
+                outputs[i] = new double[] { Math.Sin(inputs[i][0])};
+            }
+
             return (inputs, outputs);
         }
     }
