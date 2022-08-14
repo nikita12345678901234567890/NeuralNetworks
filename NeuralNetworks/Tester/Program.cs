@@ -22,7 +22,7 @@ namespace Tester
 
             for (int x = 0; x < 100000; x++)
             {
-                error = network.Train(inputs, outputs, .01);
+                error = network.BatchTrain(inputs, outputs, 4, .01, 0);
                 if (true)//x % 10000 == 0)
                 {
                     Console.SetCursorPosition(0, 0);

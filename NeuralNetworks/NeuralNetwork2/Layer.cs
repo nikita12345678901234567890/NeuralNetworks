@@ -69,11 +69,11 @@ namespace NeuralNetwork2
             return Outputs;
         }
 
-        public void ApplyUpdates()
+        public void ApplyUpdates(double momentum)
         {
             foreach (Neuron neuron in Neurons)
             {
-                neuron.ApplyUpdates();
+                neuron.ApplyUpdates(momentum);
             }
         }
 

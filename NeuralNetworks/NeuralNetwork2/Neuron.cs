@@ -17,6 +17,7 @@ namespace NeuralNetwork2
 
         public double Delta { get; set; }
         double biasUpdate;
+        double prevBiasUpdate;
 
         public Neuron(ActivationFunction activation, Neuron[] previousNerons)
         {
@@ -82,12 +83,15 @@ namespace NeuralNetwork2
             }
         }
 
-        public void ApplyUpdates()
+        public void ApplyUpdates(double momentum)
         {
+            biasUpdate += prevBiasUpdate * momentum;
             bias += biasUpdate;
+            prevBiasUpdate = biasUpdate;
+            biasUpdate = 0;
             foreach (Dendrite dendrite in dendrites)
             {
-                dendrite.ApplyUpdates();
+                dendrite.ApplyUpdates(momentum);
             }
         }
 

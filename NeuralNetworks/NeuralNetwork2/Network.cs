@@ -53,11 +53,11 @@ namespace NeuralNetwork2
             return error;
         }
 
-        public void ApplyUpdates()
+        public void ApplyUpdates(double momentum)
         {
             foreach (Layer layer in Layers)
             {
-                layer.ApplyUpdates();
+                layer.ApplyUpdates(momentum);
             }
         }
 
@@ -74,21 +74,41 @@ namespace NeuralNetwork2
             }
         }
 
-        public double Train(double[][] inputs, double[][] desiredOutputs, double learingRate)
+        public double Train(double[][] inputs, double[][] desiredOutputs, double learingRate, double momentum)
         {
             double ErrorSum = 0;
             for (int i = 0; i < inputs.Length; i++)
             {
-                var tempError = GetError(inputs[i], desiredOutputs[i]);
-                ErrorSum += tempError;
+                ErrorSum += GetError(inputs[i], desiredOutputs[i]);
 
                 Backprop(learingRate, desiredOutputs[i]);
-                ApplyUpdates();
+                ApplyUpdates(momentum);
             }
 
-         
-
             return ErrorSum / inputs.Length;
+        }
+
+        public double BatchTrain(double[][] inputs, double[][] desiredOutputs, int batchSize, double learingRate, double momentum)
+        {
+            (double[][] inputs, double[][] outputs)[] batches;
+            if (inputs.Length % batchSize == 0)
+            {
+                batches = new (double[][] inputs, double[][] desiredOutputs)[inputs.Length / batchSize];
+            }
+            else
+            {
+                throw new Exception("Not figured out yet");
+            }
+
+            double ErrorSum = 0;
+            for (int i = 0; i < batches.Length; i++)
+            {
+                batches[i] = (inputs.AsSpan(i * batchSize, batchSize).ToArray(), desiredOutputs.AsSpan(i * batchSize, batchSize).ToArray());
+
+                ErrorSum += Train(batches[i].inputs, batches[i].outputs, learingRate, momentum);
+            }
+
+            return ErrorSum / batches.Length;
         }
     }
 }
