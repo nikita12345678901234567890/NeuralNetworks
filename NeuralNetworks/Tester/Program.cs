@@ -23,7 +23,7 @@ namespace Tester
             for (int x = 0; x < 100000; x++)
             {
                 error = network.BatchTrain(inputs, outputs, 4, .01, 0);
-                if (true)//x % 10000 == 0)
+                if (true)
                 {
                     Console.SetCursorPosition(0, 0);
                     for (int i = 0; i < inputs.Length; i++)
@@ -36,6 +36,8 @@ namespace Tester
                     }
 
                     Console.WriteLine("Error: " + error);
+
+                    Console.WriteLine($"Test:\nTarget: {Math.Sin(Math.PI / 15)} Output: {network.Compute(new double[] {Math.PI / 15 })[0]}");
                 }
             }
 
