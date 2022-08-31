@@ -36,14 +36,4 @@ namespace GameTheory
             }
         }
     }
-
-    public interface IGameState<T> where T : IGameState<T>
-    {
-        int value { get; }
-        bool IsWin { get; }
-        bool IsTie { get; }
-        bool IsLoss { get; }
-        bool IsTerminal { get; }
-        T[] GetChildren();
-    }
 }
