@@ -8,83 +8,137 @@ namespace GameTheory
 {
     enum Statte //Pronounced like latte
     {
-        Win,
+        XWin,
+        OWin,
         Tie,
-        Loss,
-        Höllenfeuer,
+        Gaming,
     };
-
+    //X plays 1, O playes 2
     public class ToeTicTac : IGameState<ToeTicTac>
     {
-        Statte aktuellStatte = Statte.Höllenfeuer;
+        Statte aktuellStatte = Statte.Gaming;
 
         public int Value => throw new NotImplementedException();
 
-        public bool IsWin => aktuellStatte == Statte.Win;
+        public bool XWin => aktuellStatte == Statte.XWin;
 
         public bool IsTie => aktuellStatte == Statte.Tie;
 
-        public bool IsLoss => aktuellStatte == Statte.Loss;
+        public bool OWin => aktuellStatte == Statte.OWin;
 
-        public bool IsTerminal => aktuellStatte != Statte.Höllenfeuer;
+        public bool IsTerminal => aktuellStatte != Statte.Gaming;
 
-        CheckBox[,] Grid;
+        int[,] Grid;
+
+        public bool XTurn = true;
 
         int number;
 
         public ToeTicTac[] GetChildren()
         {
-            throw new NotImplementedException();
+            List<ToeTicTac> children = new List<ToeTicTac>();
+            for (int y = 0; y < number; y++)
+            {
+                for (int x = 0; x < number; x++)
+                {
+                    if (Grid[y, x] == 0)
+                    {
+                        ToeTicTac child = new ToeTicTac(number);
+                        child.Grid = Grid;
+
+                        //Do the move:
+                        if (XTurn) child.Grid[y, x] = 1;
+                        else child.Grid[y, x] = 2;
+
+                        //Update flags:
+                        child.CheckGameOver();
+
+                        children.Add(child);
+                    }
+                }
+            }
+            return children.ToArray();
         }
 
-        public ToeTicTac(int number, Form1 form)
+        public ToeTicTac(int number)
         {
             this.number = number;
-            //Add checkboxes
-            Grid = new CheckBox[number, number];
+            Grid = new int[number, number];
             for (int x = 0; x < number; x++)
             {
                 for (int y = 0; y < number; y++)
                 {
-                    CheckBox Fische = new CheckBox() { Location = new Point(x * 55, y * 55), ThreeState = true, Size = new Size(40, 40) };
-                    form.Controls.Add(Fische);
-                    Fische.Click += Clicked;
+                    Grid[y, x] = 0;
                 }
             }
         }
 
-        public void Clicked(object sender, EventArgs e)
+        public void CheckGameOver()
         {
             //Horizontal lines
             for (int y = 0; y < number; y++)
             {
-                bool win = true;
-                bool loss = true;
+                bool XWin = true;
+                bool OWin = true;
                 for (int x = 0; x < number; x++)
                 {
-                    if (Grid[y, x].CheckState != CheckState.Indeterminate) win = false;
-                    if (Grid[y, x].CheckState != CheckState.Checked) loss = false;
+                    if (Grid[y, x] != 1) XWin = false;
+                    if (Grid[y, x] != 2) OWin = false;
                 }
-                if (win) aktuellStatte = Statte.Win;
-                if (loss) aktuellStatte = Statte.Loss;
+                if (XWin) aktuellStatte = Statte.XWin;
+                if (OWin) aktuellStatte = Statte.OWin;
             }
 
             //Vertical lines
             for (int x = 0; x < number; x++)
             {
-                bool win = true;
-                bool loss = true;
+                bool XWin = true;
+                bool OWin = true;
                 for (int y = 0; y < number; y++)
                 {
-                    if (Grid[y, x].CheckState != CheckState.Indeterminate) win = false;
-                    if (Grid[y, x].CheckState != CheckState.Checked) loss = false;
+                    if (Grid[y, x] != 1) XWin = false;
+                    if (Grid[y, x] != 2) OWin = false;
                 }
-                if (win) aktuellStatte = Statte.Win;
-                if (loss) aktuellStatte = Statte.Loss;
+                if (XWin) aktuellStatte = Statte.XWin;
+                if (OWin) aktuellStatte = Statte.OWin;
             }
 
             //Diagonal lines
-            //left as an excersise for next class.
+            bool diagonal = true;
+            var g = Grid[0, 0];
+            //down right diagonal
+            if (g != 0)
+            {
+                for (int i = 0; i < number; i++)
+                {
+                    if (Grid[i, i] != g)
+                    {
+                        diagonal = false;
+                    }
+                }
+                if (diagonal)
+                {
+                    if (g == 2) aktuellStatte = Statte.OWin;
+                    else aktuellStatte = Statte.XWin;
+                }
+            }
+            //down left diagonal
+            var h = Grid[0, number];
+            if (h != 0)
+            {
+                for (int i = 0; i < number; i++)
+                {
+                    if (Grid[i, number - i] != h)
+                    {
+                        diagonal = false;
+                    }
+                }
+                if (diagonal)
+                {
+                    if (h == 2) aktuellStatte = Statte.OWin;
+                    else aktuellStatte = Statte.XWin;
+                }
+            }
         }
     }
 }
