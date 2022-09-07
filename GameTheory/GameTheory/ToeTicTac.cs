@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace GameTheory
     {
         Statte aktuellStatte = Statte.Gaming;
 
-        public int Value => throw new NotImplementedException();
+        public int Value { get; private set; }
 
         public bool XWin => aktuellStatte == Statte.XWin;
 
@@ -71,6 +72,9 @@ namespace GameTheory
                     Grid[y, x] = 0;
                 }
             }
+
+            Value = 0;
+            CheckGameOver();
         }
 
         public void CheckGameOver()
@@ -123,7 +127,7 @@ namespace GameTheory
                 }
             }
             //down left diagonal
-            var h = Grid[0, number];
+            var h = Grid[0, number - 1];
             if (h != 0)
             {
                 for (int i = 0; i < number; i++)
@@ -139,6 +143,28 @@ namespace GameTheory
                     else aktuellStatte = Statte.XWin;
                 }
             }
+
+            switch (aktuellStatte)
+            {
+                case Statte.XWin:
+                    Value = 1;
+                    break;
+
+                case Statte.OWin:
+                    Value = -1;
+                    break;
+
+                case Statte.Tie:
+                    Value = 0;
+                    break;
+            }
+        }
+
+        public void UpdateGrid(int[,] grid, bool XTurn)
+        {
+            Grid = grid;
+            this.XTurn = XTurn;
+            CheckGameOver();
         }
     }
 }
