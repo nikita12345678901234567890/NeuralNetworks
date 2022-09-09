@@ -7,7 +7,16 @@ using System.Threading.Tasks;
 
 namespace GameTheory
 {
-    enum Statte //Pronounced like latte
+    class PronouncedLikeAttribute : Attribute
+    {
+        public string Description { get; set; }
+        public PronouncedLikeAttribute(string description)
+            => Description = description;        
+    }
+
+
+    [PronouncedLike("latte, but with a German accent")]
+    public enum Statte
     {
         XWin,
         OWin,
@@ -17,7 +26,7 @@ namespace GameTheory
     //X plays 1, O playes 2
     public class ToeTicTac : IGameState<ToeTicTac>
     {
-        Statte aktuellStatte = Statte.Gaming;
+        public Statte aktuellStatte = Statte.Gaming;
 
         public int Value { get; private set; }
 
@@ -29,7 +38,7 @@ namespace GameTheory
 
         public bool IsTerminal => aktuellStatte != Statte.Gaming;
 
-        int[,] Grid;
+        public int[,] Grid { get; private set; }
 
         public bool XTurn = true;
 
@@ -45,7 +54,7 @@ namespace GameTheory
                     if (Grid[y, x] == 0)
                     {
                         ToeTicTac child = new ToeTicTac(number);
-                        child.Grid = Grid;
+                        child.Grid = copyArray(Grid);
 
                         //Do the move:
                         if (XTurn) child.Grid[y, x] = 1;
@@ -59,6 +68,21 @@ namespace GameTheory
                 }
             }
             return children.ToArray();
+        }
+
+        private int[,] copyArray(int[,] array)
+        {
+            int[,] copy = new int[array.GetLength(0), array.GetLength(1)];
+
+            for (int y = 0; y < array.GetLength(0); y++)
+            {
+                for (int x = 0; x < array.GetLength(1); x++)
+                {
+                    copy[y, x] = array[y, x];
+                }
+            }
+
+            return copy;
         }
 
         public ToeTicTac(int number)
@@ -132,7 +156,7 @@ namespace GameTheory
             {
                 for (int i = 0; i < number; i++)
                 {
-                    if (Grid[i, number - i] != h)
+                    if (Grid[i, number - 1] != h)
                     {
                         diagonal = false;
                     }
@@ -162,8 +186,15 @@ namespace GameTheory
 
         public void UpdateGrid(int[,] grid, bool XTurn)
         {
-            Grid = grid;
+            Grid = copyArray(grid);
             this.XTurn = XTurn;
+            CheckGameOver();
+        }
+
+        public void UpdateGrid(ToeTicTac game)
+        {
+            Grid = copyArray(game.Grid);
+            XTurn = game.XTurn;
             CheckGameOver();
         }
     }

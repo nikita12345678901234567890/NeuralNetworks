@@ -70,14 +70,28 @@ namespace GameTheory
             return newGrid;
         }
 
-        //make new overload for ^that
+        void updateCheckboxes()
+        {
+            for (int y = 0; y < number; y++)
+            {
+                for (int x = 0; x < number; x++)
+                {
+                    Grid[y, x].CheckState = (CheckState)Game.Grid[y, x];
+                    if (Grid[y, x].CheckState == CheckState.Indeterminate)
+                    {
+                        Grid[y, x].BackColor = Color.Red;
+                    }
+                }
+            }
+        }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (!Game.XTurn)
+            if (!Game.XTurn && Game.aktuellStatte == Statte.Gaming)
             {
                 var possibilities = Game.GetChildren();
-                Game.UpdateGrid(convertGrid(possibilities[miniMax.Minimax(Game, Game.XTurn)], Game.XTurn));
+                Game.UpdateGrid(possibilities[miniMax.Minimax(Game, Game.XTurn)]);
+                updateCheckboxes();
             }
         }
     }
