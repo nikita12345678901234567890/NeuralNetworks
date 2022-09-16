@@ -67,7 +67,12 @@ namespace GameTheory
                     }
                 }
             }
-            return children.ToArray();
+            return children.ToArray(); 
+        }
+
+        public int GetChildren()
+        { 
+            
         }
 
         private int[,] copyArray(int[,] array)
@@ -104,10 +109,10 @@ namespace GameTheory
         public void CheckGameOver()
         {
             //Horizontal lines
+            bool XWin = true;
+            bool OWin = true;
             for (int y = 0; y < number; y++)
             {
-                bool XWin = true;
-                bool OWin = true;
                 for (int x = 0; x < number; x++)
                 {
                     if (Grid[y, x] != 1) XWin = false;
@@ -117,11 +122,16 @@ namespace GameTheory
                 if (OWin) aktuellStatte = Statte.OWin;
             }
 
+            if (XWin || OWin)
+            {
+                setValue();
+            }
+
             //Vertical lines
             for (int x = 0; x < number; x++)
             {
-                bool XWin = true;
-                bool OWin = true;
+                XWin = true;
+                OWin = true;
                 for (int y = 0; y < number; y++)
                 {
                     if (Grid[y, x] != 1) XWin = false;
@@ -129,6 +139,11 @@ namespace GameTheory
                 }
                 if (XWin) aktuellStatte = Statte.XWin;
                 if (OWin) aktuellStatte = Statte.OWin;
+            }
+
+            if (XWin || OWin)
+            {
+                setValue();
             }
 
             //Diagonal lines
@@ -150,6 +165,7 @@ namespace GameTheory
                     else aktuellStatte = Statte.XWin;
                 }
             }
+
             //down left diagonal
             var h = Grid[0, number - 1];
             if (h != 0)
@@ -168,6 +184,22 @@ namespace GameTheory
                 }
             }
 
+            if (aktuellStatte == Statte.Gaming)
+            {
+                bool gridFull = true;
+                for (int y = 0; y < number; y++)
+                {
+                    for (int x = 0; x < number; x++)
+                    {
+                        if (Grid[y, x] == 0) gridFull = false;
+                    }
+                }
+                if (gridFull) aktuellStatte = Statte.Tie;
+            }
+        }
+
+        public void setValue()
+        {
             switch (aktuellStatte)
             {
                 case Statte.XWin:
