@@ -44,16 +44,40 @@ namespace GameTheory
 
         int number;
 
+        public List<ToeTicTac> children;
+
+        public ToeTicTac(int number)
+        {
+            children = new List<ToeTicTac>();
+            this.number = number;
+            Grid = new int[number, number];
+            for (int x = 0; x < number; x++)
+            {
+                for (int y = 0; y < number; y++)
+                {
+                    Grid[y, x] = 0;
+                }
+            }
+
+            Value = 0;
+            CheckGameOver();
+        }
+
         public ToeTicTac[] GetChildren()
         {
-            List<ToeTicTac> children = new List<ToeTicTac>();
+            GetChildren(this);
+            return children.ToArray();
+        }
+
+        private int GetChildren(ToeTicTac parent)
+        {
             for (int y = 0; y < number; y++)
             {
                 for (int x = 0; x < number; x++)
                 {
                     if (Grid[y, x] == 0)
                     {
-                        ToeTicTac child = new ToeTicTac(number);
+                        ToeTicTac child = new ToeTicTac(parent.number);
                         child.Grid = copyArray(Grid);
 
                         //Do the move:
@@ -67,12 +91,24 @@ namespace GameTheory
                     }
                 }
             }
-            return children.ToArray(); 
-        }
 
-        public int GetChildren()
-        { 
-            
+            int maxValue = int.MinValue;
+            foreach (ToeTicTac child in children)
+            {
+                if (!child.IsTerminal)
+                {
+                    int value = child.GetChildren(child);
+                    if (value > maxValue) maxValue = value;
+                }
+                else
+                {
+                    setValue();
+                    return Value;
+                }
+            }
+
+            Value = maxValue;
+            return maxValue;
         }
 
         private int[,] copyArray(int[,] array)
@@ -88,22 +124,6 @@ namespace GameTheory
             }
 
             return copy;
-        }
-
-        public ToeTicTac(int number)
-        {
-            this.number = number;
-            Grid = new int[number, number];
-            for (int x = 0; x < number; x++)
-            {
-                for (int y = 0; y < number; y++)
-                {
-                    Grid[y, x] = 0;
-                }
-            }
-
-            Value = 0;
-            CheckGameOver();
         }
 
         public void CheckGameOver()
@@ -125,6 +145,7 @@ namespace GameTheory
             if (XWin || OWin)
             {
                 setValue();
+                return;
             }
 
             //Vertical lines
@@ -144,6 +165,7 @@ namespace GameTheory
             if (XWin || OWin)
             {
                 setValue();
+                return;
             }
 
             //Diagonal lines
@@ -163,6 +185,8 @@ namespace GameTheory
                 {
                     if (g == 2) aktuellStatte = Statte.OWin;
                     else aktuellStatte = Statte.XWin;
+                    setValue();
+                    return;
                 }
             }
 
@@ -181,6 +205,8 @@ namespace GameTheory
                 {
                     if (h == 2) aktuellStatte = Statte.OWin;
                     else aktuellStatte = Statte.XWin;
+                    setValue();
+                    return;
                 }
             }
 
