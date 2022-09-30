@@ -36,7 +36,7 @@
             // 
             this.timer1.Enabled = true;
             this.timer1.Interval = 16;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            //this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // Form1
             // 

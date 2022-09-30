@@ -35,24 +35,21 @@ namespace GameTheory
             }
         }
 
-        void Clicked(object sender, EventArgs e)
+        void Clicked(object sender, EventArgs e) //this not work
         {
             var Sender = (CheckBox) sender;
-            if (!Game.XTurn)
-            {
-                //Unclicking the checkbox
-                if (Sender.CheckState != CheckState.Unchecked)
-                {
-                    Sender.CheckState--;
-                }
-                else
-                {
-                    Sender.CheckState = CheckState.Indeterminate;
-                }
-            }
-            else
+            Sender.Enabled = false;
+
+            if (Game.XTurn)
             {
                 Game.UpdateGrid(convertGrid(), !Game.XTurn);
+                if (Game.aktuellStatte == Statte.Gaming)
+                {
+                    var possibilities = Game.GetChildren();
+                    Game.UpdateGrid(possibilities[miniMax.Minimax(Game, Game.XTurn)]);
+                    updateCheckboxes();
+                }
+                //sets to tie;
             }
         }
 
@@ -80,18 +77,14 @@ namespace GameTheory
                     if (Grid[y, x].CheckState == CheckState.Indeterminate)
                     {
                         Grid[y, x].BackColor = Color.Red;
+                        Grid[y, x].Enabled = false;
+                    }
+                    else if (Grid[y, x].CheckState == CheckState.Checked)
+                    {
+                        Grid[y, x].BackColor = Color.Blue;
+                        Grid[y, x].Enabled = false;
                     }
                 }
-            }
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            if (!Game.XTurn && Game.aktuellStatte == Statte.Gaming)
-            {
-                var possibilities = Game.GetChildren();
-                Game.UpdateGrid(possibilities[miniMax.Minimax(Game, Game.XTurn)]);
-                updateCheckboxes();
             }
         }
     }

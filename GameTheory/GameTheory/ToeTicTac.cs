@@ -14,7 +14,7 @@ namespace GameTheory
             => Description = description;        
     }
 
-
+    
     [PronouncedLike("latte, but with a German accent")]
     public enum Statte
     {
@@ -65,11 +65,14 @@ namespace GameTheory
 
         public ToeTicTac[] GetChildren()
         {
-            GetChildren(this);
+            getChildren();
             return children.ToArray();
         }
-
-        private int GetChildren(ToeTicTac parent)
+        /// <summary>
+        /// Everything in this function below line 104 is Edden approved
+        /// </summary>
+        /// <returns></returns>
+        private int getChildren()
         {
             for (int y = 0; y < number; y++)
             {
@@ -77,12 +80,15 @@ namespace GameTheory
                 {
                     if (Grid[y, x] == 0)
                     {
-                        ToeTicTac child = new ToeTicTac(parent.number);
+                        ToeTicTac child = new ToeTicTac(number);
                         child.Grid = copyArray(Grid);
 
                         //Do the move:
                         if (XTurn) child.Grid[y, x] = 1;
                         else child.Grid[y, x] = 2;
+
+                        //Very important
+                        child.XTurn = !XTurn;
 
                         //Update flags:
                         child.CheckGameOver();
@@ -91,24 +97,27 @@ namespace GameTheory
                     }
                 }
             }
-
-            int maxValue = int.MinValue;
+            
+            
             foreach (ToeTicTac child in children)
             {
-                if (!child.IsTerminal)
+                if (!child.IsTerminal) child.getChildren();
+                else child.setValue();
+
+                if (XTurn)
                 {
-                    int value = child.GetChildren(child);
-                    if (value > maxValue) maxValue = value;
+                    if (child.Value > Value) Value = child.Value;
                 }
                 else
                 {
-                    setValue();
-                    return Value;
+                    if (child.Value < Value) Value = child.Value;
                 }
+
+                setState();
+                return Value;
             }
 
-            Value = maxValue;
-            return maxValue;
+            return Value;
         }
 
         private int[,] copyArray(int[,] array)
@@ -242,6 +251,24 @@ namespace GameTheory
             }
         }
 
+        public void setState()
+        {
+            switch (Value)
+            {
+                case 1:
+                    aktuellStatte = Statte.XWin;
+                    break;
+
+                case -1:
+                    aktuellStatte = Statte.OWin;
+                    break;
+
+                case 0:
+                    aktuellStatte = Statte.Tie;
+                    break;
+            }
+        }
+
         public void UpdateGrid(int[,] grid, bool XTurn)
         {
             Grid = copyArray(grid);
@@ -249,7 +276,7 @@ namespace GameTheory
             CheckGameOver();
         }
 
-        public void UpdateGrid(ToeTicTac game)
+        public void UpdateGrid(ToeTicTac game) 
         {
             Grid = copyArray(game.Grid);
             XTurn = game.XTurn;
