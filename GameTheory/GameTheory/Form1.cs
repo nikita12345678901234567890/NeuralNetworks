@@ -10,7 +10,7 @@ namespace GameTheory
 
         CheckBox[,] Grid;
 
-        ToeTicTac Game = new ToeTicTac(number);
+        ToeTicTac Game = new ToeTicTac(number, true);
 
         MiniMax<ToeTicTac> miniMax = new MiniMax<ToeTicTac>();
 
@@ -40,7 +40,7 @@ namespace GameTheory
             Grid[1, 2].CheckState = CheckState.Checked;
         }
 
-        void Clicked(object sender, EventArgs e) //this not work
+        void Clicked(object sender, EventArgs e)
         {
             var Sender = (CheckBox) sender;
             Sender.Enabled = false;
@@ -51,7 +51,7 @@ namespace GameTheory
                 if (Game.aktuellStatte == Statte.Gaming)
                 {
                     var possibilities = Game.GetChildren();
-                    Game.UpdateGrid(possibilities[miniMax.Minimax(Game, Game.XTurn)]);
+                    Game.UpdateGrid(possibilities[miniMax.Minimax(Game, Game.XTurn)]); //When move made, it doesn't go down the tree or possibilities.
                     updateCheckboxes();
                 }
             }

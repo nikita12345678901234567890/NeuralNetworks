@@ -46,10 +46,11 @@ namespace GameTheory
 
         public List<ToeTicTac> children;
 
-        public ToeTicTac(int number)
+        public ToeTicTac(int number, bool XTurn)
         {
             children = new List<ToeTicTac>();
             this.number = number;
+            this.XTurn = XTurn;
             Grid = new int[number, number];
             for (int x = 0; x < number; x++)
             {
@@ -59,7 +60,11 @@ namespace GameTheory
                 }
             }
 
-            Value = 0;
+            if (XTurn) Value = -1;
+            else
+            {
+                Value = 1;
+            }
             CheckGameOver();
         }
 
@@ -74,13 +79,18 @@ namespace GameTheory
         /// <returns></returns>
         private int getChildren()
         {
+            //if (IsTerminal || children.Count != 0)
+            //{
+            //    return 0;
+            //}
+
             for (int y = 0; y < number; y++)
             {
                 for (int x = 0; x < number; x++)
                 {
                     if (Grid[y, x] == 0)
                     {
-                        ToeTicTac child = new ToeTicTac(number);
+                        ToeTicTac child = new ToeTicTac(number, !XTurn);
                         child.Grid = copyArray(Grid);
 
                         //Do the move:
@@ -88,7 +98,7 @@ namespace GameTheory
                         else child.Grid[y, x] = 2;
 
                         //Very important
-                        child.XTurn = !XTurn;
+                        //child.XTurn = !XTurn;
 
                         //Update flags:
                         child.CheckGameOver();
@@ -106,15 +116,13 @@ namespace GameTheory
 
                 if (XTurn)
                 {
+                    //Value = -1; //Edden was right, this is problematic;
                     if (child.Value > Value) Value = child.Value;
                 }
                 else
                 {
                     if (child.Value < Value) Value = child.Value;
                 }
-
-                setState();
-                return Value;
             }
 
             return Value;
@@ -231,6 +239,8 @@ namespace GameTheory
                 }
                 if (gridFull) aktuellStatte = Statte.Tie;
             }
+
+            setValue();
         }
 
         public void setValue()
@@ -246,6 +256,10 @@ namespace GameTheory
                     break;
 
                 case Statte.Tie:
+                    Value = 0;
+                    break;
+
+                default:
                     Value = 0;
                     break;
             }

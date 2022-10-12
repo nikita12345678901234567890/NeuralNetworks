@@ -15,10 +15,14 @@ namespace GameTheory
             //if maximizer turn, find greatest value in all the possible turns
             //else if minimizer turn, find smallest value in all the possible turns
             */
+            
+            /*
             if (state.IsTerminal)
             {
-                return state.Value;
+                //return state.Value;
+                return 0;
             }
+            */
 
             var possibilities = state.GetChildren();
             int minIndex = 0;
