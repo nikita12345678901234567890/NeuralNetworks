@@ -14,6 +14,8 @@ namespace GameTheory
 
         MiniMax<ToeTicTac> miniMax = new MiniMax<ToeTicTac>();
 
+        TextBox ResultBox;
+
         public Form1()
         {
             InitializeComponent();
@@ -22,6 +24,11 @@ namespace GameTheory
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            ResultBox = new TextBox();
+            ResultBox.Location = new Point(100, 100);
+            ResultBox.Visible = false;
+            Controls.Add(ResultBox);
+
             Game.XTurn = true;
             for (int x = 0; x < number; x++)
             {
@@ -34,10 +41,12 @@ namespace GameTheory
                 }
             }
 
-            Grid[0, 0].CheckState = CheckState.Checked;
-            Grid[1, 0].CheckState = CheckState.Indeterminate;
-            Grid[2, 0].CheckState = CheckState.Indeterminate;
-            Grid[1, 2].CheckState = CheckState.Checked;
+            //Grid[0, 0].CheckState = CheckState.Checked;
+            //Grid[1, 0].CheckState = CheckState.Indeterminate;
+            //Grid[2, 0].CheckState = CheckState.Indeterminate;
+            //Grid[1, 2].CheckState = CheckState.Checked;
+            //Game.UpdateGrid(convertGrid(), true);
+            //updateCheckboxes();
         }
 
         void Clicked(object sender, EventArgs e)
@@ -47,14 +56,64 @@ namespace GameTheory
 
             if (Game.XTurn)
             {
-                Game.UpdateGrid(convertGrid(), !Game.XTurn);
-                if (Game.aktuellStatte == Statte.Gaming)
+                doMove();
+                if (Game.children.Count != 0)
                 {
                     var possibilities = Game.GetChildren();
-                    Game.UpdateGrid(possibilities[miniMax.Minimax(Game, Game.XTurn)]); //When move made, it doesn't go down the tree or possibilities.
+                    Game = possibilities[miniMax.Minimax(Game, Game.XTurn)];
                     updateCheckboxes();
                 }
+                else
+                {
+                    Game.setState();
+                    switch (Game.aktuellStatte)
+                    {
+                        case Statte.Tie:
+                            ResultBox.Text = "You tied";
+                            ResultBox.Visible = true;
+                            break;
+
+                        case Statte.XWin:
+                            ResultBox.Text = "Player won";
+                            ResultBox.Visible = true;
+                            break;
+
+                        case Statte.OWin:
+                            ResultBox.Text = "Computer won";
+                            ResultBox.Visible = true;
+                            break;
+                    }
+                }
             }
+        }
+
+        void doMove()
+        {
+            var grid = convertGrid();
+            var possibilities = Game.GetChildren();
+
+            //for each possible move
+            for (int i = 0; i < possibilities.Length; i++)
+            {
+                bool matches = true;
+                //loop through the grid
+                for (int y = 0; y < number; y++)
+                {
+                    for (int x = 0; x < number; x++)
+                    {
+                        //and check if it matched the current grid
+                        if (possibilities[i].Grid[y, x] != grid[y, x]) matches = false;
+                    }
+                }
+
+                if (matches)
+                {
+                    Game = possibilities[i];
+                    return;
+                }
+            }
+
+            throw new Exception("Move not possible");
         }
 
         int[,] convertGrid()

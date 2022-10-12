@@ -79,10 +79,10 @@ namespace GameTheory
         /// <returns></returns>
         private int getChildren()
         {
-            //if (IsTerminal || children.Count != 0)
-            //{
-            //    return 0;
-            //}
+            if (IsTerminal || children.Count != 0)
+            {
+                return 0;
+            }
 
             for (int y = 0; y < number; y++)
             {
