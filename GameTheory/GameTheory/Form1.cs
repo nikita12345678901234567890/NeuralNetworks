@@ -27,6 +27,7 @@ namespace GameTheory
             ResultBox = new TextBox();
             ResultBox.Location = new Point(100, 100);
             ResultBox.Visible = false;
+            ResultBox.Enabled = false;
             Controls.Add(ResultBox);
 
             Game.XTurn = true;
@@ -41,12 +42,14 @@ namespace GameTheory
                 }
             }
 
-            //Grid[0, 0].CheckState = CheckState.Checked;
-            //Grid[1, 0].CheckState = CheckState.Indeterminate;
-            //Grid[2, 0].CheckState = CheckState.Indeterminate;
-            //Grid[1, 2].CheckState = CheckState.Checked;
-            //Game.UpdateGrid(convertGrid(), true);
-            //updateCheckboxes();
+            Grid[0, 0].CheckState = CheckState.Checked;
+            Grid[1, 0].CheckState = CheckState.Indeterminate;
+            Grid[1, 1].CheckState = CheckState.Checked;
+            Grid[1, 2].CheckState = CheckState.Checked;
+            Grid[2, 0].CheckState = CheckState.Indeterminate;
+            Grid[2, 2].CheckState = CheckState.Indeterminate;
+            Game.UpdateGrid(convertGrid(), true);
+            updateCheckboxes();
         }
 
         void Clicked(object sender, EventArgs e)
@@ -63,7 +66,7 @@ namespace GameTheory
                     Game = possibilities[miniMax.Minimax(Game, Game.XTurn)];
                     updateCheckboxes();
                 }
-                else
+                else//print game result
                 {
                     Game.setState();
                     switch (Game.aktuellStatte)
@@ -92,16 +95,13 @@ namespace GameTheory
             var grid = convertGrid();
             var possibilities = Game.GetChildren();
 
-            //for each possible move
             for (int i = 0; i < possibilities.Length; i++)
             {
                 bool matches = true;
-                //loop through the grid
                 for (int y = 0; y < number; y++)
                 {
                     for (int x = 0; x < number; x++)
                     {
-                        //and check if it matched the current grid
                         if (possibilities[i].Grid[y, x] != grid[y, x]) matches = false;
                     }
                 }

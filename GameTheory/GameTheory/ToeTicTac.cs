@@ -60,11 +60,6 @@ namespace GameTheory
                 }
             }
 
-            if (XTurn) Value = -1;
-            else
-            {
-                Value = 1;
-            }
             CheckGameOver();
         }
 
@@ -79,10 +74,12 @@ namespace GameTheory
         /// <returns></returns>
         private int getChildren()
         {
-            if (IsTerminal || children.Count != 0)
+            if (XTurn) Value = -1;
+            else
             {
-                return 0;
+                Value = 1;
             }
+            children.Clear();
 
             for (int y = 0; y < number; y++)
             {
@@ -103,12 +100,19 @@ namespace GameTheory
                         //Update flags:
                         child.CheckGameOver();
 
-                        children.Add(child);
+                        if (!child.IsTerminal)
+                        {
+                            children.Add(child);
+                        }
                     }
                 }
             }
-            
-            
+
+            if (children.Count == 0)
+            {
+                CheckGameOver();
+            }
+
             foreach (ToeTicTac child in children)
             {
                 if (!child.IsTerminal) child.getChildren();
