@@ -42,12 +42,6 @@ namespace GameTheory
                 }
             }
 
-            Grid[0, 0].CheckState = CheckState.Checked;
-            Grid[1, 0].CheckState = CheckState.Indeterminate;
-            Grid[1, 1].CheckState = CheckState.Checked;
-            Grid[1, 2].CheckState = CheckState.Checked;
-            Grid[2, 0].CheckState = CheckState.Indeterminate;
-            Grid[2, 2].CheckState = CheckState.Indeterminate;
             Game.UpdateGrid(convertGrid(), true);
             updateCheckboxes();
         }
@@ -57,35 +51,34 @@ namespace GameTheory
             var Sender = (CheckBox) sender;
             Sender.Enabled = false;
 
-            if (Game.XTurn)
+            if (Game.XTurn && !Game.IsTerminal)
             {
                 doMove();
-                if (Game.children.Count != 0)
-                {
-                    var possibilities = Game.GetChildren();
-                    Game = possibilities[miniMax.Minimax(Game, Game.XTurn)];
-                    updateCheckboxes();
-                }
-                else//print game result
-                {
-                    Game.setState();
-                    switch (Game.aktuellStatte)
-                    {
-                        case Statte.Tie:
-                            ResultBox.Text = "You tied";
-                            ResultBox.Visible = true;
-                            break;
+                var possibilities = Game.GetChildren();
+                Game = possibilities[miniMax.Minimax(Game, Game.XTurn)];
+                updateCheckboxes();
+            }
 
-                        case Statte.XWin:
-                            ResultBox.Text = "Player won";
-                            ResultBox.Visible = true;
-                            break;
 
-                        case Statte.OWin:
-                            ResultBox.Text = "Computer won";
-                            ResultBox.Visible = true;
-                            break;
-                    }
+            if(Game.IsTerminal)//print game result
+            {
+                Game.setState();
+                switch (Game.aktuellStatte)
+                {
+                    case Statte.Tie:
+                        ResultBox.Text = "You tied";
+                        ResultBox.Visible = true;
+                        break;
+
+                    case Statte.XWin:
+                        ResultBox.Text = "Player won";
+                        ResultBox.Visible = true;
+                        break;
+
+                    case Statte.OWin:
+                        ResultBox.Text = "Computer won";
+                        ResultBox.Visible = true;
+                        break;
                 }
             }
         }
@@ -149,6 +142,11 @@ namespace GameTheory
                     }
                 }
             }
+        }
+
+        private void ResetButton_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }

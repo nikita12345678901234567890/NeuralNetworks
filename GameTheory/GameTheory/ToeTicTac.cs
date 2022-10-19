@@ -74,39 +74,40 @@ namespace GameTheory
         /// <returns></returns>
         private int getChildren()
         {
-            if (XTurn) Value = -1;
-            else
-            {
-                Value = 1;
-            }
+            CheckGameOver();
             children.Clear();
 
-            for (int y = 0; y < number; y++)
+            if (!IsTerminal)
             {
-                for (int x = 0; x < number; x++)
+                for (int y = 0; y < number; y++)
                 {
-                    if (Grid[y, x] == 0)
+                    for (int x = 0; x < number; x++)
                     {
-                        ToeTicTac child = new ToeTicTac(number, !XTurn);
-                        child.Grid = copyArray(Grid);
-
-                        //Do the move:
-                        if (XTurn) child.Grid[y, x] = 1;
-                        else child.Grid[y, x] = 2;
-
-                        //Very important
-                        //child.XTurn = !XTurn;
-
-                        //Update flags:
-                        child.CheckGameOver();
-
-                        if (!child.IsTerminal)
+                        if (Grid[y, x] == 0)
                         {
+                            ToeTicTac child = new ToeTicTac(number, !XTurn);
+                            child.Grid = copyArray(Grid);
+
+                            //Do the move:
+                            if (XTurn) child.Grid[y, x] = 1;
+                            else child.Grid[y, x] = 2;
+
+                            //Very important
+                            //child.XTurn = !XTurn;
+
+                            //Update flags:
+                            child.CheckGameOver();
+
                             children.Add(child);
                         }
                     }
                 }
             }
+
+            if (XTurn) Value = -1;
+            else Value = 1;
+
+            this.children.Count(); //For debugging
 
             if (children.Count == 0)
             {
@@ -116,7 +117,7 @@ namespace GameTheory
             foreach (ToeTicTac child in children)
             {
                 if (!child.IsTerminal) child.getChildren();
-                else child.setValue();
+                else child.CheckGameOver();
 
                 if (XTurn)
                 {
@@ -154,6 +155,8 @@ namespace GameTheory
             bool OWin = true;
             for (int y = 0; y < number; y++)
             {
+                XWin = true;
+                OWin = true;
                 for (int x = 0; x < number; x++)
                 {
                     if (Grid[y, x] != 1) XWin = false;
@@ -161,13 +164,14 @@ namespace GameTheory
                 }
                 if (XWin) aktuellStatte = Statte.XWin;
                 if (OWin) aktuellStatte = Statte.OWin;
+
+                if (XWin || OWin)
+                {
+                    setValue();
+                    return;
+                }
             }
 
-            if (XWin || OWin)
-            {
-                setValue();
-                return;
-            }
 
             //Vertical lines
             for (int x = 0; x < number; x++)
@@ -181,13 +185,14 @@ namespace GameTheory
                 }
                 if (XWin) aktuellStatte = Statte.XWin;
                 if (OWin) aktuellStatte = Statte.OWin;
-            }
 
-            if (XWin || OWin)
-            {
-                setValue();
-                return;
+                if (XWin || OWin)
+                {
+                    setValue();
+                    return;
+                }
             }
+            
 
             //Diagonal lines
             bool diagonal = true;
