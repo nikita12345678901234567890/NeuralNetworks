@@ -217,12 +217,13 @@ namespace GameTheory
             }
 
             //down left diagonal
+            diagonal = true;
             var h = Grid[0, number - 1];
             if (h != 0)
             {
                 for (int i = 0; i < number; i++)
                 {
-                    if (Grid[i, number - 1] != h)
+                    if (Grid[i, number - (1 + i)] != h)
                     {
                         diagonal = false;
                     }
@@ -304,6 +305,21 @@ namespace GameTheory
             Grid = copyArray(game.Grid);
             XTurn = game.XTurn;
             CheckGameOver();
+        }
+
+        public void Reset()
+        {
+            for (int y = 0; y < number; y++)
+            {
+                for (int x = 0; x < number; x++)
+                {
+                    Grid[y, x] = 0;
+                }
+            }
+
+            aktuellStatte = Statte.Gaming;
+            XTurn = true;
+            children.Clear();
         }
     }
 }

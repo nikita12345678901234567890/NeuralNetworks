@@ -6,7 +6,7 @@ namespace GameTheory
 {
     public partial class Form1 : Form
     {//Player is X, Min is O
-        const int number = 3;
+        const int number = 1;
 
         CheckBox[,] Grid;
 
@@ -15,6 +15,8 @@ namespace GameTheory
         MiniMax<ToeTicTac> miniMax = new MiniMax<ToeTicTac>();
 
         TextBox ResultBox;
+
+        int moveNum = 0;
 
         public Form1()
         {
@@ -42,8 +44,14 @@ namespace GameTheory
                 }
             }
 
-            Game.UpdateGrid(convertGrid(), true);
-            updateCheckboxes();
+            //Grid[0, 0].CheckState = CheckState.Checked;
+            //Grid[1, 0].CheckState = CheckState.Indeterminate;
+            //Grid[1, 1].CheckState = CheckState.Checked;
+            //Grid[1, 2].CheckState = CheckState.Checked;
+            //Grid[2, 0].CheckState = CheckState.Indeterminate;
+            //Grid[2, 2].CheckState = CheckState.Indeterminate;
+            //Game.UpdateGrid(convertGrid(), true);
+            //updateCheckboxes();
         }
 
         void Clicked(object sender, EventArgs e)
@@ -51,34 +59,43 @@ namespace GameTheory
             var Sender = (CheckBox) sender;
             Sender.Enabled = false;
 
-            if (Game.XTurn && !Game.IsTerminal)
+            if (Game.XTurn)
             {
-                doMove();
-                var possibilities = Game.GetChildren();
-                Game = possibilities[miniMax.Minimax(Game, Game.XTurn)];
-                updateCheckboxes();
-            }
-
-
-            if(Game.IsTerminal)//print game result
-            {
-                Game.setState();
-                switch (Game.aktuellStatte)
+                if (Game.children.Count != 0 || moveNum == 0)
                 {
-                    case Statte.Tie:
-                        ResultBox.Text = "You tied";
-                        ResultBox.Visible = true;
-                        break;
+                    doMove();
+                    moveNum++;
+                    var possibilities = Game.GetChildren();
+                    if (possibilities.Length != 0)
+                    {
+                        Game = possibilities[miniMax.Minimax(Game, Game.XTurn)];
+                        updateCheckboxes();
+                    }
+                }
 
-                    case Statte.XWin:
-                        ResultBox.Text = "Player won";
-                        ResultBox.Visible = true;
-                        break;
+                if (Game.children.Count == 0 && moveNum != 0)//print game result
+                {
+                    Game.setState();
+                    switch (Game.aktuellStatte)
+                    {
+                        case Statte.Tie:
+                            updateCheckboxes();
+                            ResultBox.Text = "You tied";
+                            ResultBox.Visible = true;
+                            break;
 
-                    case Statte.OWin:
-                        ResultBox.Text = "Computer won";
-                        ResultBox.Visible = true;
-                        break;
+                        case Statte.XWin:
+                            updateCheckboxes();
+                            ResultBox.Text = "Player won";
+                            ResultBox.Visible = true;
+                            break;
+
+                        case Statte.OWin:
+                            updateCheckboxes();
+                            ResultBox.Text = "Computer won";
+                            ResultBox.Visible = true;
+                            break;
+                    }
                 }
             }
         }
@@ -140,13 +157,30 @@ namespace GameTheory
                         Grid[y, x].BackColor = Color.Blue;
                         Grid[y, x].Enabled = false;
                     }
+                    else
+                    {
+                        Grid[y, x].BackColor = Color.Transparent;
+                        Grid[y, x].Enabled = true;
+                    }
                 }
             }
         }
 
         private void ResetButton_Click(object sender, EventArgs e)
         {
-            
+            for (int y = 0; y < number; y++)
+            {
+                for (int x = 0; x < number; x++)
+                {
+                    Grid[y, x].CheckState = CheckState.Unchecked;
+                }
+            }
+
+            Game.Reset();
+            updateCheckboxes();
+            moveNum = 0;
+
+            ResultBox.Visible = false;
         }
     }
 }
