@@ -6,7 +6,7 @@ namespace GameTheory
 {
     public partial class Form1 : Form
     {//Player is X, Min is O
-        const int number = 1;
+        const int number = 3;
 
         CheckBox[,] Grid;
 

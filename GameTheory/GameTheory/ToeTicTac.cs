@@ -46,6 +46,11 @@ namespace GameTheory
 
         public List<ToeTicTac> children;
 
+        int alpha = int.MinValue;
+        int beta = int.MaxValue;
+
+        bool calculated = false;
+
         public ToeTicTac(int number, bool XTurn)
         {
             children = new List<ToeTicTac>();
@@ -75,6 +80,7 @@ namespace GameTheory
         private int getChildren()
         {
             CheckGameOver();
+            if (calculated) return Value;
             children.Clear();
 
             if (!IsTerminal)
@@ -98,6 +104,9 @@ namespace GameTheory
                             //Update flags:
                             child.CheckGameOver();
 
+                            child.alpha = alpha;
+                            child.beta = beta;
+
                             children.Add(child);
                         }
                     }
@@ -119,17 +128,26 @@ namespace GameTheory
                 if (!child.IsTerminal) child.getChildren();
                 else child.CheckGameOver();
 
-                if (XTurn)
+                if (XTurn)//Maximizer
                 {
                     //Value = -1; //Edden was right, this is problematic;
                     if (child.Value > Value) Value = child.Value;
+                    if (child.Value < alpha) alpha = child.Value;
                 }
                 else
                 {
                     if (child.Value < Value) Value = child.Value;
+                    if (child.Value > beta) beta = child.Value;
+                }
+
+                if (alpha >= beta)
+                {
+                    Value = child.Value;
+                    return Value;
                 }
             }
 
+            calculated = true;
             return Value;
         }
 
@@ -320,6 +338,7 @@ namespace GameTheory
             aktuellStatte = Statte.Gaming;
             XTurn = true;
             children.Clear();
+            calculated = false;
         }
     }
 }
