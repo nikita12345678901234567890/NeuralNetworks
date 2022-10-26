@@ -74,7 +74,7 @@ namespace GameTheory
             return children.ToArray();
         }
         /// <summary>
-        /// Everything in this function below line 104 is Edden approved
+        /// Everything in this function is Edden approved
         /// </summary>
         /// <returns></returns>
         private int getChildren()
@@ -128,22 +128,29 @@ namespace GameTheory
                 if (!child.IsTerminal) child.getChildren();
                 else child.CheckGameOver();
 
+
                 if (XTurn)//Maximizer
                 {
                     //Value = -1; //Edden was right, this is problematic;
                     if (child.Value > Value) Value = child.Value;
-                    if (child.Value < alpha) alpha = child.Value;
+                    if (child.Value > alpha) alpha = child.Value;
+
+                    if (alpha >= beta)
+                    {
+                        Value = alpha;
+                        return Value;
+                    }
                 }
                 else
                 {
                     if (child.Value < Value) Value = child.Value;
-                    if (child.Value > beta) beta = child.Value;
-                }
+                    if (child.Value < beta) beta = child.Value;
 
-                if (alpha >= beta)
-                {
-                    Value = child.Value;
-                    return Value;
+                    if (alpha >= beta)
+                    {
+                        Value = beta;
+                        return Value;
+                    }
                 }
             }
 

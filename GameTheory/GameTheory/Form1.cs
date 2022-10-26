@@ -30,7 +30,7 @@ namespace GameTheory
             ResultBox.Location = new Point(100, 100);
             ResultBox.Visible = false;
             ResultBox.Enabled = false;
-            Controls.Add(ResultBox);
+            Controls.Add(ResultBox);//
 
             Game.XTurn = true;
             for (int x = 0; x < number; x++)
@@ -56,7 +56,7 @@ namespace GameTheory
 
         void Clicked(object sender, EventArgs e)
         {
-            var Sender = (CheckBox) sender;
+            var Sender = (CheckBox)sender;
             Sender.Enabled = false;
 
             if (Game.XTurn)
