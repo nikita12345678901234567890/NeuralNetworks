@@ -28,7 +28,7 @@ namespace GameTheory
     {
         public Statte aktuellStatte = Statte.Gaming;
 
-        public int Value { get; private set; }
+        public int Value { get; set; }
 
         public bool XWin => aktuellStatte == Statte.XWin;
 
@@ -45,11 +45,6 @@ namespace GameTheory
         int number;
 
         public List<ToeTicTac> children;
-
-        int alpha = int.MinValue;
-        int beta = int.MaxValue;
-
-        bool calculated = false;
 
         public ToeTicTac(int number, bool XTurn)
         {
@@ -77,10 +72,9 @@ namespace GameTheory
         /// Everything in this function is Edden approved
         /// </summary>
         /// <returns></returns>
-        private int getChildren()
+        private void getChildren()
         {
             CheckGameOver();
-            if (calculated) return Value;
             children.Clear();
 
             if (!IsTerminal)
@@ -104,58 +98,12 @@ namespace GameTheory
                             //Update flags:
                             child.CheckGameOver();
 
-                            child.alpha = alpha;
-                            child.beta = beta;
 
                             children.Add(child);
                         }
                     }
                 }
             }
-
-            if (XTurn) Value = -1;
-            else Value = 1;
-
-            this.children.Count(); //For debugging
-
-            if (children.Count == 0)
-            {
-                CheckGameOver();
-            }
-
-            foreach (ToeTicTac child in children)
-            {
-                if (!child.IsTerminal) child.getChildren();
-                else child.CheckGameOver();
-
-
-                if (XTurn)//Maximizer
-                {
-                    //Value = -1; //Edden was right, this is problematic;
-                    if (child.Value > Value) Value = child.Value;
-                    if (child.Value > alpha) alpha = child.Value;
-
-                    if (alpha >= beta)
-                    {
-                        Value = alpha;
-                        return Value;
-                    }
-                }
-                else
-                {
-                    if (child.Value < Value) Value = child.Value;
-                    if (child.Value < beta) beta = child.Value;
-
-                    if (alpha >= beta)
-                    {
-                        Value = beta;
-                        return Value;
-                    }
-                }
-            }
-
-            calculated = true;
-            return Value;
         }
 
         private int[,] copyArray(int[,] array)
