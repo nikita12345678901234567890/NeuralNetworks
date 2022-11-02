@@ -22,31 +22,61 @@ namespace GameTheory
 
             if (isMax) //if maximizer turn, find greatest value
             {
-                int value = int.MinValue;
-                foreach (T move in children)
+                state.Value = -1;
+                int bestIndex = 0;
+                for (int i = 0; i < children.Count(); i++)
                 {
-                    value = Math.Max(value, Minimax(move, false, alpha, beta, depth + 1)); //flip turn on recursion
-                    alpha = Math.Max(alpha, value); //store best value for maximizer
+                    int temp = Minimax(children[i], false, alpha, beta, depth + 1); //flip turn on recursion
+                    if (temp > state.Value)
+                    {
+                        state.Value = temp;
+                        bestIndex = i;
+                    }
+                    
+                    if (alpha > state.Value) //store best value for maximizer
+                    {
+                        alpha = state.Value;
+                        //bestIndex = i;
+                    }
                     if (alpha >= beta)
                     {
                         break; //cutoff if better value is assured
                     }
                 }
-                return value;
+                if (depth == 0)
+                {
+                    return bestIndex;
+                }
+                return state.Value;
             }
             else //else if minimizer turn, find smallest value
             {
-                int value = int.MaxValue;
-                foreach (T move in children)
+                state.Value = 1;
+                int bestIndex = 0;
+                for (int i = 0; i < children.Count(); i++)
                 {
-                    value = Math.Min(value, Minimax(move, true, alpha, beta, depth + 1)); //flip turn on recursion
-                    beta = Math.Min(beta, value); //store best value for minimizer
+                    int temp = Minimax(children[i], true, alpha, beta, depth + 1); //flip turn on recursion
+                    if (temp < state.Value)
+                    {
+                        state.Value = temp;
+                        bestIndex = i;
+                    }
+
+                    if (beta < state.Value) //store best value for minimizer
+                    {
+                        beta = state.Value;
+                        //bestIndex = i;
+                    }
                     if (alpha >= beta)
                     {
                         break; //cutoff if better value is assured
                     }
                 }
-                return value;
+                if (depth == 0)
+                {
+                    return bestIndex;
+                }
+                return state.Value;
             }
 
 

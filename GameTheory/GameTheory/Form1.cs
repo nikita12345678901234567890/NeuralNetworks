@@ -44,19 +44,19 @@ namespace GameTheory
                 }
             }
 
-            //Grid[0, 0].CheckState = CheckState.Checked;
-            //Grid[1, 0].CheckState = CheckState.Indeterminate;
-            //Grid[1, 1].CheckState = CheckState.Checked;
-            //Grid[1, 2].CheckState = CheckState.Checked;
-            //Grid[2, 0].CheckState = CheckState.Indeterminate;
-            //Grid[2, 2].CheckState = CheckState.Indeterminate;
-            //Game.UpdateGrid(convertGrid(), true);
-            //updateCheckboxes();
+            Grid[0, 0].CheckState = CheckState.Checked;
+            Grid[1, 0].CheckState = CheckState.Indeterminate;
+            Grid[1, 1].CheckState = CheckState.Checked;
+            Grid[1, 2].CheckState = CheckState.Checked;
+            Grid[2, 0].CheckState = CheckState.Indeterminate;
+            Grid[2, 2].CheckState = CheckState.Indeterminate;
+            Game.UpdateGrid(convertGrid(), true);
+            updateCheckboxes();
         }
 
         void Clicked(object sender, EventArgs e)
         {
-            var Sender = (CheckBox)sender;
+            var Sender = (CheckBox) sender;
             Sender.Enabled = false;
 
             if (Game.XTurn)

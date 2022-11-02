@@ -65,15 +65,6 @@ namespace GameTheory
 
         public ToeTicTac[] GetChildren()
         {
-            getChildren();
-            return children.ToArray();
-        }
-        /// <summary>
-        /// Everything in this function is Edden approved
-        /// </summary>
-        /// <returns></returns>
-        private void getChildren()
-        {
             CheckGameOver();
             children.Clear();
 
@@ -98,12 +89,13 @@ namespace GameTheory
                             //Update flags:
                             child.CheckGameOver();
 
-
                             children.Add(child);
                         }
                     }
                 }
             }
+
+            return children.ToArray();
         }
 
         private int[,] copyArray(int[,] array)
@@ -293,7 +285,6 @@ namespace GameTheory
             aktuellStatte = Statte.Gaming;
             XTurn = true;
             children.Clear();
-            calculated = false;
         }
     }
 }
