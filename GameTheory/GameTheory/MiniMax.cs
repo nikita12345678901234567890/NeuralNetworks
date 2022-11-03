@@ -33,7 +33,7 @@ namespace GameTheory
                         bestIndex = i;
                     }
                     
-                    if (alpha > state.Value) //store best value for maximizer
+                    if (state.Value > alpha) //store best value for maximizer
                     {
                         alpha = state.Value;
                         //bestIndex = i;
@@ -62,7 +62,7 @@ namespace GameTheory
                         bestIndex = i;
                     }
 
-                    if (beta < state.Value) //store best value for minimizer
+                    if (state.Value < beta) //store best value for minimizer
                     {
                         beta = state.Value;
                         //bestIndex = i;

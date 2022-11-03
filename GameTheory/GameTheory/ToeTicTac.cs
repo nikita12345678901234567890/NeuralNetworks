@@ -240,24 +240,6 @@ namespace GameTheory
             }
         }
 
-        public void setState()
-        {
-            switch (Value)
-            {
-                case 1:
-                    aktuellStatte = Statte.XWin;
-                    break;
-
-                case -1:
-                    aktuellStatte = Statte.OWin;
-                    break;
-
-                case 0:
-                    aktuellStatte = Statte.Tie;
-                    break;
-            }
-        }
-
         public void UpdateGrid(int[,] grid, bool XTurn)
         {
             Grid = copyArray(grid);

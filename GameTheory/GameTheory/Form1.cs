@@ -46,10 +46,10 @@ namespace GameTheory
 
             Grid[0, 0].CheckState = CheckState.Checked;
             Grid[1, 0].CheckState = CheckState.Indeterminate;
-            Grid[1, 1].CheckState = CheckState.Checked;
+            //Grid[1, 1].CheckState = CheckState.Checked;
             Grid[1, 2].CheckState = CheckState.Checked;
             Grid[2, 0].CheckState = CheckState.Indeterminate;
-            Grid[2, 2].CheckState = CheckState.Indeterminate;
+            //Grid[2, 2].CheckState = CheckState.Indeterminate;
             Game.UpdateGrid(convertGrid(), true);
             updateCheckboxes();
         }
@@ -61,6 +61,7 @@ namespace GameTheory
 
             if (Game.XTurn)
             {
+                Game.GetChildren();
                 if (Game.children.Count != 0 || moveNum == 0)
                 {
                     doMove();
@@ -75,7 +76,6 @@ namespace GameTheory
 
                 if (Game.children.Count == 0 && moveNum != 0)//print game result
                 {
-                    Game.setState();
                     switch (Game.aktuellStatte)
                     {
                         case Statte.Tie:
