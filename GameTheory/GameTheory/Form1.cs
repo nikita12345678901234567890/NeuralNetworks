@@ -30,7 +30,7 @@ namespace GameTheory
             ResultBox.Location = new Point(100, 100);
             ResultBox.Visible = false;
             ResultBox.Enabled = false;
-            Controls.Add(ResultBox);//
+            Controls.Add(ResultBox);
 
             Game.XTurn = true;
             for (int x = 0; x < number; x++)
