@@ -1,19 +1,24 @@
+using System.Runtime.CompilerServices;
+
 namespace MonteCarlo
 {
     public partial class Form1 : Form
     {
-        Button[,] buttons;
         const int number = 8;
+
+        Button[,] buttons;
         const int spacing = 50;
 
         bool selected = false;
         Point selectedPos = new Point();
 
+        Chackers Game;
 
         public Form1()
         {
             InitializeComponent();
             buttons = new Button[number, number];
+            Game = new Chackers(number);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -30,11 +35,53 @@ namespace MonteCarlo
                     //buttons[y, x].Text = "Test";
                     buttons[y, x].Size = new Size(20, 20);
 
+
+                    buttons[y, x].Tag = new Point(y, x);
+
                     Controls.Add(buttons[y, x]);
 
                     buttons[y, x].Click += Clicked;
+                }
+            }
 
-                    if ((y % 2 != 0) != (x % 2 != 0)) //XOR
+            Game.ResetBoard();
+            UpdateGrid();
+        }
+
+        void Clicked(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            Point position = (Point)button.Tag;
+
+            if (!selected && Game.Grid[position.Y, position.X] != Pieces.Death)
+            {
+                button.BackColor = Color.Yellow;
+                selected = true;
+                selectedPos = position;
+            }
+
+            else if (selected && Game.Grid[position.Y, position.X] == 0)
+            {
+                if (Game.Move(selectedPos, position))
+                {
+                    UpdateGrid();
+                }
+            }
+
+            else if (selected && position == selectedPos)
+            {
+                selected = false;
+                UpdateGrid();
+            }
+        }
+
+        void UpdateGrid()
+        {
+            for (int y = 0; y < number; y++)
+            {
+                for (int x = 0; x < number; x++)
+                {
+                    if (Game.Grid[y, x] == -1) //XOR
                     {
                         buttons[y, x].Enabled = false;
                         buttons[y, x].Visible = false;
@@ -44,39 +91,20 @@ namespace MonteCarlo
                         buttons[y, x].Enabled = true;
                         buttons[y, x].Visible = true;
 
-                        if (y <= 2)
+                        if (Game.Grid[y, x] == 2)
                         {
                             buttons[y, x].BackColor = Color.Red;
                         }
-                        if (y >= number - 3)
+                        else if (Game.Grid[y, x] == 1)
                         {
                             buttons[y, x].BackColor = Color.Blue;
                         }
+                        else
+                        {
+                            buttons[y, x].BackColor = Color.Black;
+                        }
                     }
                 }
-            }
-        }
-
-        void Clicked(object sender, EventArgs e)
-        {
-            Button button = (Button)sender;
-            Point position = new Point();
-            for (int y = 0; y < number; y++)
-            {
-                for (int x = 0; x < number; x++)
-                {
-                    if (buttons[y, x] == button)
-                    {
-                        position.X = x;
-                        position.Y = y;
-                    }
-                }
-            }
-
-            if (!selected)
-            {
-                button.BackColor = Color.Yellow;
-                selected = true;
             }
         }
     }
