@@ -9,9 +9,10 @@ namespace MonteCarlo
 {
     public enum Pieces
     {
-        Death = -1,
-        Bob,
-        Arnold
+        Dead = -1,
+        Empty,
+        Blue,
+        Red
     }
 
     public class Chackers
@@ -23,7 +24,7 @@ namespace MonteCarlo
         public Chackers(int number)
         {
             this.number = number;
-            Grid = new int[number, number];
+            Grid = new Pieces[number, number];
         }
 
         public bool Move(Point piece, Point destination)
@@ -44,17 +45,17 @@ namespace MonteCarlo
                 {
                     if ((y % 2 != 0) != (x % 2 != 0)) //XOR
                     {
-                        Grid[y, x] = -1;
+                        Grid[y, x] = Pieces.Dead;
                     }
                     else
                     {
                         if (y <= 2)
                         {
-                            Grid[y, x] = 2;
+                            Grid[y, x] = Pieces.Red;
                         }
                         if (y >= number - 3)
                         {
-                            Grid[y, x] = 1;
+                            Grid[y, x] = Pieces.Blue;
                         }
                     }
                 }
