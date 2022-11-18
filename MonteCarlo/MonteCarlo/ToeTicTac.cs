@@ -39,16 +39,20 @@ namespace MonteCarlo
 
         public int[,] Grid { get; private set; }
 
+        public bool IsExpanded { get; set; }
+        public int win { get; set; }
+        public int number { get; set; }
+
         public bool XTurn = true;
 
-        int number;
+        int gridSize;
 
         public List<ToeTicTac> children;
 
         public ToeTicTac(int number, bool XTurn)
         {
             children = new List<ToeTicTac>();
-            this.number = number;
+            gridSize = number;
             this.XTurn = XTurn;
             Grid = new int[number, number];
             for (int x = 0; x < number; x++)
@@ -62,6 +66,11 @@ namespace MonteCarlo
             CheckGameOver();
         }
 
+        public double UCT(int parentN)
+        {
+            return (win / number) + IGameState<ToeTicTac>.C * (Math.Log(parentN) / number);
+        }
+
         public ToeTicTac[] GetChildren()
         {
             CheckGameOver();
@@ -69,13 +78,13 @@ namespace MonteCarlo
 
             if (!IsTerminal)
             {
-                for (int y = 0; y < number; y++)
+                for (int y = 0; y < gridSize; y++)
                 {
-                    for (int x = 0; x < number; x++)
+                    for (int x = 0; x < gridSize; x++)
                     {
                         if (Grid[y, x] == 0)
                         {
-                            ToeTicTac child = new ToeTicTac(number, !XTurn);
+                            ToeTicTac child = new ToeTicTac(gridSize, !XTurn);
                             child.Grid = copyArray(Grid);
 
                             //Do the move:
@@ -117,11 +126,11 @@ namespace MonteCarlo
             //Horizontal lines
             bool XWin = true;
             bool OWin = true;
-            for (int y = 0; y < number; y++)
+            for (int y = 0; y < gridSize; y++)
             {
                 XWin = true;
                 OWin = true;
-                for (int x = 0; x < number; x++)
+                for (int x = 0; x < gridSize; x++)
                 {
                     if (Grid[y, x] != 1) XWin = false;
                     if (Grid[y, x] != 2) OWin = false;
@@ -138,11 +147,11 @@ namespace MonteCarlo
 
 
             //Vertical lines
-            for (int x = 0; x < number; x++)
+            for (int x = 0; x < gridSize; x++)
             {
                 XWin = true;
                 OWin = true;
-                for (int y = 0; y < number; y++)
+                for (int y = 0; y < gridSize; y++)
                 {
                     if (Grid[y, x] != 1) XWin = false;
                     if (Grid[y, x] != 2) OWin = false;
@@ -164,7 +173,7 @@ namespace MonteCarlo
             //down right diagonal
             if (g != 0)
             {
-                for (int i = 0; i < number; i++)
+                for (int i = 0; i < gridSize; i++)
                 {
                     if (Grid[i, i] != g)
                     {
@@ -182,12 +191,12 @@ namespace MonteCarlo
 
             //down left diagonal
             diagonal = true;
-            var h = Grid[0, number - 1];
+            var h = Grid[0, gridSize - 1];
             if (h != 0)
             {
-                for (int i = 0; i < number; i++)
+                for (int i = 0; i < gridSize; i++)
                 {
-                    if (Grid[i, number - (1 + i)] != h)
+                    if (Grid[i, gridSize - (1 + i)] != h)
                     {
                         diagonal = false;
                     }
@@ -204,9 +213,9 @@ namespace MonteCarlo
             if (aktuellStatte == Statte.Gaming)
             {
                 bool gridFull = true;
-                for (int y = 0; y < number; y++)
+                for (int y = 0; y < gridSize; y++)
                 {
-                    for (int x = 0; x < number; x++)
+                    for (int x = 0; x < gridSize; x++)
                     {
                         if (Grid[y, x] == 0) gridFull = false;
                     }
@@ -255,9 +264,9 @@ namespace MonteCarlo
 
         public void Reset()
         {
-            for (int y = 0; y < number; y++)
+            for (int y = 0; y < gridSize; y++)
             {
-                for (int x = 0; x < number; x++)
+                for (int x = 0; x < gridSize; x++)
                 {
                     Grid[y, x] = 0;
                 }
@@ -266,6 +275,11 @@ namespace MonteCarlo
             aktuellStatte = Statte.Gaming;
             XTurn = true;
             children.Clear();
+        }
+
+        double IGameState<ToeTicTac>.UCT(double parentUCT)
+        {
+            throw new NotImplementedException();
         }
     }
 }

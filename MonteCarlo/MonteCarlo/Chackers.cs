@@ -23,7 +23,7 @@ namespace MonteCarlo
 
         public Statte aktuellStatte = Statte.Gaming;
 
-        public bool Xturn = true;
+        public bool Xturn { get; private set; }
         public int Value { get; set; }
 
         public bool XWin => aktuellStatte == Statte.XWin;
@@ -38,6 +38,7 @@ namespace MonteCarlo
 
         public Chackers(int number)
         {
+            Xturn = true;
             this.number = number;
             Grid = new Pieces[number, number];
             children = new List<Chackers>();
@@ -45,6 +46,7 @@ namespace MonteCarlo
 
         public Chackers(int number, Pieces[,] Grid)
         {
+            Xturn = true;
             this.number = number;
             this.Grid = Grid;
             children = new List<Chackers>();
@@ -78,7 +80,21 @@ namespace MonteCarlo
 
         public bool Move(Point piece, Point destination)
         {
-            //Do error checking here!
+            GetChildren();
+
+            bool found = false;
+            foreach (var child in children)
+            {
+                if (child.Grid[piece.Y, piece.X] == Pieces.Empty && child.Grid[destination.Y, destination.X] == (Xturn ? Pieces.Blue : Pieces.Red))
+                {
+                    if (found)
+                    {
+                        throw new Exception("Multiple moves found");
+                    }
+                    found = true;
+                }
+            }
+            if (!found) return false;
 
             Grid[destination.Y, destination.X] = Grid[piece.Y, piece.X];
             Grid[piece.Y, piece.X] = 0;
@@ -91,42 +107,101 @@ namespace MonteCarlo
             
         }
 
-        private Chackers[] GetMoves(int x, int y)
+        private Chackers[] GetMoves(int x, int y)  // this is dead to me
         {
             List<Chackers> moves = new List<Chackers>();
 
             if (Grid[y, x] == Pieces.Blue) //Player, bottom
             {
-                if (y >= 2 && x >= 2) //up left
+                if (y >= 1 && x >= 1) //up left
                 {
-                    if (Grid[y, x] == Pieces.Empty)
+                    if (Grid[y - 1, x - 1] == Pieces.Empty) //Move
                     {
                         moves.Add(new Chackers(number, Grid));
+                        var temp = moves[moves.Count - 1].Grid[y, x];
                         moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
-                        moves[moves.Count - 1].Grid[y - 2, x - 2] = Pieces.Blue;
-
-                        if()
+                        moves[moves.Count - 1].Grid[y - 1, x - 1] = temp;
+                        moves[moves.Count - 1].Xturn = !Xturn;
+                    }
+                    else if ((y >= 2 && x >= 2) && Grid[y - 1, x - 1] == Pieces.Red && Grid[y - 2, x - 2] == Pieces.Empty) //Take
+                    {
+                        moves.Add(new Chackers(number, Grid));
+                        var temp = moves[moves.Count - 1].Grid[y, x];
+                        moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
+                        moves[moves.Count - 1].Grid[y - 1, x - 1] = Pieces.Empty;
+                        moves[moves.Count - 1].Grid[y - 2, x - 2] = temp;
+                        moves[moves.Count - 1].Xturn = !Xturn;
                     }
                 }
 
-                if (y >= 2 && x < number - 2) //up right
-                { 
-                    
+                if (y >= 1 && x < number - 1) //up right
+                {
+                    if (Grid[y - 1, x + 1] == Pieces.Empty) //Move
+                    {
+                        moves.Add(new Chackers(number, Grid));
+                        var temp = moves[moves.Count - 1].Grid[y, x];
+                        moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
+                        moves[moves.Count - 1].Grid[y - 1, x + 1] = temp;
+                        moves[moves.Count - 1].Xturn = !Xturn;
+                    }
+                    else if ((y >= 2 && x < number - 2) && Grid[y - 1, x + 1] == Pieces.Red && Grid[y - 2, x + 2] == Pieces.Empty) //Take
+                    {
+                        moves.Add(new Chackers(number, Grid));
+                        var temp = moves[moves.Count - 1].Grid[y, x];
+                        moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
+                        moves[moves.Count - 1].Grid[y - 1, x + 1] = Pieces.Empty;
+                        moves[moves.Count - 1].Grid[y - 2, x + 2] = temp;
+                        moves[moves.Count - 1].Xturn = !Xturn;
+                    }
                 }
             }
 
             if (Grid[y, x] == Pieces.Red) //AI, top
             {
-                if (y < number - 2 && x >= 2) //down left
-                { 
-                    
+                if (y < number - 1 && x >= 1) //down left
+                {
+                    if (Grid[y + 1, x - 1] == Pieces.Empty) //Move
+                    {
+                        moves.Add(new Chackers(number, Grid));
+                        var temp = moves[moves.Count - 1].Grid[y, x];
+                        moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
+                        moves[moves.Count - 1].Grid[y + 1, x - 1] = temp;
+                        moves[moves.Count - 1].Xturn = !Xturn;
+                    }
+                    else if ((y < number - 2 && x >= 2) && Grid[y + 1, x - 1] == Pieces.Blue && Grid[y + 2, x - 2] == Pieces.Empty) //Take
+                    {
+                        moves.Add(new Chackers(number, Grid));
+                        var temp = moves[moves.Count - 1].Grid[y, x];
+                        moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
+                        moves[moves.Count - 1].Grid[y + 1, x - 1] = Pieces.Empty;
+                        moves[moves.Count - 1].Grid[y + 2, x - 2] = temp;
+                        moves[moves.Count - 1].Xturn = !Xturn;
+                    }
                 }
 
-                if (y < number - 2 && x < number - 2) //down right
-                { 
-                    
+                if (y < number - 1 && x < number - 1) //down right
+                {
+                    if (Grid[y + 1, x + 1] == Pieces.Empty) //Move
+                    {
+                        moves.Add(new Chackers(number, Grid));
+                        var temp = moves[moves.Count - 1].Grid[y, x];
+                        moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
+                        moves[moves.Count - 1].Grid[y + 1, x + 1] = temp;
+                        moves[moves.Count - 1].Xturn = !Xturn;
+                    }
+                    else if ((y < number - 2 && x < number - 2) && Grid[y + 1, x + 1] == Pieces.Blue && Grid[y + 2, x + 2] == Pieces.Empty) //Take
+                    {
+                        moves.Add(new Chackers(number, Grid));
+                        var temp = moves[moves.Count - 1].Grid[y, x];
+                        moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
+                        moves[moves.Count - 1].Grid[y + 1, x + 1] = Pieces.Empty;
+                        moves[moves.Count - 1].Grid[y + 2, x + 2] = temp;
+                        moves[moves.Count - 1].Xturn = !Xturn;
+                    }
                 }
             }
+
+            return moves.ToArray();
         }
 
         public void ResetBoard()
@@ -153,6 +228,5 @@ namespace MonteCarlo
                 }
             }
         }
-
     }
 }

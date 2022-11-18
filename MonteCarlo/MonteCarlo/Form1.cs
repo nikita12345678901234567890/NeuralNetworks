@@ -266,25 +266,32 @@ namespace MonteCarlo
             Button button = (Button)sender;
             Point position = (Point)button.Tag;
 
-            if (!selected && cGame.Grid[position.Y, position.X] == Pieces.Blue)
+            if (cGame.Xturn)
             {
-                button.BackColor = Color.Yellow;
-                selected = true;
-                selectedPos = position;
-            }
-
-            else if (selected && cGame.Grid[position.Y, position.X] == Pieces.Empty)
-            {
-                if (cGame.Move(selectedPos, position))
+                if (!selected && cGame.Grid[position.Y, position.X] == Pieces.Blue)
                 {
+                    button.BackColor = Color.Yellow;
+                    selected = true;
+                    selectedPos = position;
+                }
+
+                else if (selected && cGame.Grid[position.Y, position.X] == Pieces.Empty)
+                {
+                    if (cGame.Move(selectedPos, position))
+                    {
+                        UpdateGrid();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid move");
+                    }
+                }
+
+                else if (selected && position == selectedPos)
+                {
+                    selected = false;
                     UpdateGrid();
                 }
-            }
-
-            else if (selected && position == selectedPos)
-            {
-                selected = false;
-                UpdateGrid();
             }
         }
 
