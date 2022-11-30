@@ -9,6 +9,8 @@
         bool IsTerminal { get; }
         T[] GetChildren();
 
+        List<T> Children { get; set; }
+
         //Monte carlo stuff:
         bool IsExpanded { get; set; }
         double UCT(int parentN);

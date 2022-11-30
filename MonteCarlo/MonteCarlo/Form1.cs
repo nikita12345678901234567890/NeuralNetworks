@@ -104,7 +104,7 @@ namespace MonteCarlo
             if (Game.XTurn)
             {
                 Game.GetChildren();
-                if (Game.children.Count != 0 || moveNum == 0)
+                if (Game.Children.Count != 0 || moveNum == 0)
                 {
                     doMove();
                     moveNum++;
@@ -116,7 +116,7 @@ namespace MonteCarlo
                     }
                 }
 
-                if (Game.children.Count == 0 && moveNum != 0)//print game result
+                if (Game.Children.Count == 0 && moveNum != 0)//print game result
                 {
                     switch (Game.aktuellStatte)
                     {
