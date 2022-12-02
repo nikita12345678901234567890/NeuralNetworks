@@ -49,9 +49,10 @@ namespace MonteCarlo
 
         public List<ToeTicTac> Children { get; set; }
 
+        public ToeTicTac Parent { get; set; }
+
         public ToeTicTac(int number, bool XTurn)
         {
-            DoStuff(this);
             Children = new List<ToeTicTac>();
             gridSize = number;
             this.XTurn = XTurn;
@@ -66,17 +67,18 @@ namespace MonteCarlo
 
             CheckGameOver();
         }
-        void DoStuff<T>(IGameState<T> bob) where T : IGameState<T>
-        { }
 
-        public double UCT(int parentN)
+        public double UCT()
         {
-            return (win / number) + IGameState<ToeTicTac>.C * (Math.Log(parentN) / number);
+            return (win / number) + IGameState<ToeTicTac>.C * (Math.Log(Parent.number) / number);
         }
 
         public ToeTicTac[] GetChildren()
         {
             CheckGameOver();
+
+            if (IsExpanded) return Children.ToArray();
+
             Children.Clear();
 
             if (!IsTerminal)
@@ -99,6 +101,8 @@ namespace MonteCarlo
 
                             //Update flags:
                             child.CheckGameOver();
+
+                            child.Parent = this;
 
                             Children.Add(child);
                         }
@@ -279,10 +283,5 @@ namespace MonteCarlo
             XTurn = true;
             Children.Clear();
         }
-
-        //double IGameState<ToeTicTac>.UCT(double parentUCT)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

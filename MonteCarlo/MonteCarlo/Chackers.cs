@@ -36,6 +36,8 @@ namespace MonteCarlo
 
         public List<Chackers> Children { get; set; }
 
+        public Chackers Parent { get; set; }
+
         public bool IsExpanded { get; set; }
         public int win { get; set; }
         public int number { get; set; }
@@ -56,9 +58,9 @@ namespace MonteCarlo
             Children = new List<Chackers>();
         }
 
-        public double UCT(int parentN)
+        public double UCT()
         {
-            return (win / number) + IGameState<Chackers>.C * (Math.Log(parentN) / number);
+            return (win / number) + IGameState<Chackers>.C * (Math.Log(Parent.number) / number);
         }
 
         public Chackers[] GetChildren()

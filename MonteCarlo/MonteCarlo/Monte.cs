@@ -7,23 +7,23 @@ using System.Threading.Tasks;
 namespace MonteCarlo
 {
     public class Monte<T> where T : IGameState<T>
-    {  //don't murder children
-        public static T MCTS(int iterations, T startingState, Random random)
+    {
+        public T MCTS(int iterations, T startingState, Random random)
         {
             //Generate the monte-carlo tree
-            var rootNode = new Node<T>(startingState);
+            IGameState<T> rootNode = startingState;
             for (int i = 0; i < iterations; i++)
             {
                 var selectedNode = Select(rootNode);
-                var expandedChild = Expand(selectedNode);
+                var expandedChild = Expand(selectedNode, random);
                 int value = Simulate(expandedChild, random);
                 Backpropagate(value, expandedChild);
             }
 
             //return the best child
-            var sortedChildren = rootNode.Children.OrderByDescending((state) => state.W);
+            var sortedChildren = rootNode.Children.OrderByDescending((state) => state.win);
             var topChild = sortedChildren.First();
-            return topChild.State;
+            return topChild;
         }
 
         private IGameState<T> Select(IGameState<T> rootNode)
@@ -37,7 +37,7 @@ namespace MonteCarlo
 
                 foreach (var child in currentNode.GetChildren())
                 {
-                    double val = child.UCT(currentNode.number);
+                    double val = child.UCT();
 
                     if (val > highestUCT)
                     {
@@ -52,12 +52,12 @@ namespace MonteCarlo
             return currentNode;
         }
 
-        static IGameState<T> Expand(IGameState<T> currentNode)
+        static IGameState<T> Expand(IGameState<T> currentNode, Random random)
         {
             currentNode.GetChildren();
 
             if (currentNode.Children.Count == 0) return currentNode;
-            return currentNode.Children[0];
+            return currentNode.Children[random.Next(0, currentNode.Children.Count)];
         }
 
         static int Simulate(IGameState<T> currentNode, Random random)

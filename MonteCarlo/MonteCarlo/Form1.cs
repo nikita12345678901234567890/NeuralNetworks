@@ -16,6 +16,8 @@ namespace MonteCarlo
         int moveNum = 0;
 
         Button ResetButton;
+
+        Monte<ToeTicTac> MonTicTac;
         #endregion
 
         #region  Chackers
@@ -30,6 +32,8 @@ namespace MonteCarlo
         Chackers cGame;
         #endregion
 
+        Random random;
+
         public Form1()
         {
             InitializeComponent();
@@ -37,6 +41,8 @@ namespace MonteCarlo
             cGame = new Chackers(cNumber);
 
             Grid = new CheckBox[tNumber, tNumber];
+
+            random = new Random();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -55,6 +61,9 @@ namespace MonteCarlo
         void LoadToeTicTac()
         {
             Controls.Clear();
+
+            MonTicTac = new Monte<ToeTicTac>();
+
 
             ResultBox = new TextBox();
             ResultBox.Location = new Point(100, 100);
@@ -111,7 +120,7 @@ namespace MonteCarlo
                     var possibilities = Game.GetChildren();
                     if (possibilities.Length != 0)
                     {
-                        //Game = possibilities[miniMax.Minimax(Game, Game.XTurn)];
+                        Game = MonTicTac.MCTS(1000, Game, random);  //Monte called;
                         updateCheckboxes();
                     }
                 }
