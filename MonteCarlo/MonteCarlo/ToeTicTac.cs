@@ -65,6 +65,10 @@ namespace MonteCarlo
                 }
             }
 
+            IsExpanded = false;
+            this.number = 1;
+            win = 0;
+
             CheckGameOver();
         }
 

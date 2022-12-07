@@ -48,6 +48,10 @@ namespace MonteCarlo
             this.gridSize = number;
             Grid = new Pieces[number, number];
             Children = new List<Chackers>();
+
+            this.number = 1;
+            win = 0;
+            IsExpanded = false;
         }
 
         public Chackers(int number, Pieces[,] Grid)
@@ -56,6 +60,10 @@ namespace MonteCarlo
             this.gridSize = number;
             this.Grid = Grid;
             Children = new List<Chackers>();
+
+            this.number = 1;
+            win = 0;
+            IsExpanded = false;
         }
 
         public double UCT()

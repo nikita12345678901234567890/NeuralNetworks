@@ -55,6 +55,7 @@ namespace MonteCarlo
         static IGameState<T> Expand(IGameState<T> currentNode, Random random)
         {
             currentNode.GetChildren();
+            currentNode.IsExpanded = true;
 
             if (currentNode.Children.Count == 0) return currentNode;
             return currentNode.Children[random.Next(0, currentNode.Children.Count)];
@@ -65,8 +66,8 @@ namespace MonteCarlo
             while (!currentNode.IsTerminal)
             {
                 currentNode.GetChildren();
-                int randomIndex = random.Next(0, currentNode.Children.Count);
-                currentNode = currentNode.Children[randomIndex];
+                
+                currentNode = currentNode.Children[random.Next(0, currentNode.Children.Count)];
             }
             if (currentNode.XWin) return 1;
             else if (currentNode.IsTie) return 0;
@@ -78,10 +79,13 @@ namespace MonteCarlo
             IGameState<T> currentNode = simulatedNode;
             while (currentNode != null)
             {
-                value = -value;
                 currentNode.number++;
                 currentNode.win += value;
                 currentNode = currentNode.Parent;
+                if (currentNode != null)
+                {
+                    value = -value;
+                }
             }
         }
     }
