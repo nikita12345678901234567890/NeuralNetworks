@@ -95,14 +95,14 @@ namespace MonteCarlo
 
             Controls.Add(ResetButton);
 
-            //Grid[0, 0].CheckState = CheckState.Checked;
-            //Grid[1, 0].CheckState = CheckState.Indeterminate;
-            //Grid[1, 1].CheckState = CheckState.Checked;
-            //Grid[1, 2].CheckState = CheckState.Checked;
-            //Grid[2, 0].CheckState = CheckState.Indeterminate;
-            //Grid[2, 2].CheckState = CheckState.Indeterminate;
-            //Game.UpdateGrid(convertGrid(), true);
-            //updateCheckboxes();
+            Grid[0, 0].CheckState = CheckState.Checked;
+            Grid[1, 0].CheckState = CheckState.Indeterminate;
+            Grid[1, 1].CheckState = CheckState.Checked;
+            Grid[1, 2].CheckState = CheckState.Checked;
+            Grid[2, 0].CheckState = CheckState.Indeterminate;
+            Grid[2, 2].CheckState = CheckState.Indeterminate;
+            Game.UpdateGrid(convertGrid(), true);
+            updateCheckboxes();
         }
 
         void ClickTicTac(object sender, EventArgs e)
@@ -120,7 +120,7 @@ namespace MonteCarlo
                     var possibilities = Game.GetChildren();
                     if (possibilities.Length != 0)
                     {
-                        Game = MonTicTac.MCTS(1000, Game, random);  //Monte called;
+                        Game = MonTicTac.MCTS(10000, Game);  //Monte called;
                         updateCheckboxes();
                     }
                 }

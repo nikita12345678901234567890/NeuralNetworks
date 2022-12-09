@@ -286,6 +286,10 @@ namespace MonteCarlo
             aktuellStatte = Statte.Gaming;
             XTurn = true;
             Children.Clear();
+
+            IsExpanded = false;
+            win = 0;
+            number = 1;
         }
     }
 }

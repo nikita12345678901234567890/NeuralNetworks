@@ -8,15 +8,19 @@ namespace MonteCarlo
 {
     public class Monte<T> where T : IGameState<T>
     {
-        public T MCTS(int iterations, T startingState, Random random)
+        private Random random = new Random(2);
+
+        public T MCTS(int iterations, T startingState)
         {
+            random = new Random(2);
+
             //Generate the monte-carlo tree
             IGameState<T> rootNode = startingState;
             for (int i = 0; i < iterations; i++)
             {
                 var selectedNode = Select(rootNode);
-                var expandedChild = Expand(selectedNode, random);
-                int value = Simulate(expandedChild, random);
+                var expandedChild = Expand(selectedNode);
+                int value = Simulate(expandedChild);
                 Backpropagate(value, expandedChild);
             }
 
@@ -52,7 +56,7 @@ namespace MonteCarlo
             return currentNode;
         }
 
-        static IGameState<T> Expand(IGameState<T> currentNode, Random random)
+        private IGameState<T> Expand(IGameState<T> currentNode)
         {
             currentNode.GetChildren();
             currentNode.IsExpanded = true;
@@ -61,7 +65,7 @@ namespace MonteCarlo
             return currentNode.Children[random.Next(0, currentNode.Children.Count)];
         }
 
-        static int Simulate(IGameState<T> currentNode, Random random)
+        private int Simulate(IGameState<T> currentNode)
         {
             while (!currentNode.IsTerminal)
             {
@@ -74,7 +78,7 @@ namespace MonteCarlo
             else return -1;
         }
 
-        static void Backpropagate(int value, IGameState<T> simulatedNode)
+        private static void Backpropagate(int value, IGameState<T> simulatedNode)
         {
             IGameState<T> currentNode = simulatedNode;
             while (currentNode != null)
