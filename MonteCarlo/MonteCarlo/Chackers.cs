@@ -23,7 +23,7 @@ namespace MonteCarlo
 
         public Statte aktuellStatte = Statte.Gaming;
 
-        public bool Xturn { get; private set; }
+        public bool XTurn { get; set; }
         public int Value { get; set; }
 
         public bool XWin => aktuellStatte == Statte.XWin;
@@ -44,7 +44,7 @@ namespace MonteCarlo
 
         public Chackers(int number)
         {
-            Xturn = true;
+            XTurn = true;
             this.gridSize = number;
             Grid = new Pieces[number, number];
             Children = new List<Chackers>();
@@ -56,7 +56,7 @@ namespace MonteCarlo
 
         public Chackers(int number, Pieces[,] Grid)
         {
-            Xturn = true;
+            XTurn = true;
             this.gridSize = number;
             this.Grid = Grid;
             Children = new List<Chackers>();
@@ -82,7 +82,7 @@ namespace MonteCarlo
                 {
                     for (int x = 0; x < gridSize; x++)
                     {
-                        if ((Xturn && Grid[y, x] == Pieces.Blue) || (!Xturn && Grid[y, x] == Pieces.Red))
+                        if ((XTurn && Grid[y, x] == Pieces.Blue) || (!XTurn && Grid[y, x] == Pieces.Red))
                         {
                             var moves = GetMoves(x, y);
                             foreach (var Move in moves)
@@ -104,7 +104,7 @@ namespace MonteCarlo
             bool found = false;
             foreach (var child in Children)
             {
-                if (child.Grid[piece.Y, piece.X] == Pieces.Empty && child.Grid[destination.Y, destination.X] == (Xturn ? Pieces.Blue : Pieces.Red))
+                if (child.Grid[piece.Y, piece.X] == Pieces.Empty && child.Grid[destination.Y, destination.X] == (XTurn ? Pieces.Blue : Pieces.Red))
                 {
                     if (found)
                     {
@@ -140,7 +140,7 @@ namespace MonteCarlo
                         var temp = moves[moves.Count - 1].Grid[y, x];
                         moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
                         moves[moves.Count - 1].Grid[y - 1, x - 1] = temp;
-                        moves[moves.Count - 1].Xturn = !Xturn;
+                        moves[moves.Count - 1].XTurn = !XTurn;
                     }
                     else if ((y >= 2 && x >= 2) && Grid[y - 1, x - 1] == Pieces.Red && Grid[y - 2, x - 2] == Pieces.Empty) //Take
                     {
@@ -149,7 +149,7 @@ namespace MonteCarlo
                         moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
                         moves[moves.Count - 1].Grid[y - 1, x - 1] = Pieces.Empty;
                         moves[moves.Count - 1].Grid[y - 2, x - 2] = temp;
-                        moves[moves.Count - 1].Xturn = !Xturn;
+                        moves[moves.Count - 1].XTurn = !XTurn;
                     }
                 }
 
@@ -161,7 +161,7 @@ namespace MonteCarlo
                         var temp = moves[moves.Count - 1].Grid[y, x];
                         moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
                         moves[moves.Count - 1].Grid[y - 1, x + 1] = temp;
-                        moves[moves.Count - 1].Xturn = !Xturn;
+                        moves[moves.Count - 1].XTurn = !XTurn;
                     }
                     else if ((y >= 2 && x < gridSize - 2) && Grid[y - 1, x + 1] == Pieces.Red && Grid[y - 2, x + 2] == Pieces.Empty) //Take
                     {
@@ -170,7 +170,7 @@ namespace MonteCarlo
                         moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
                         moves[moves.Count - 1].Grid[y - 1, x + 1] = Pieces.Empty;
                         moves[moves.Count - 1].Grid[y - 2, x + 2] = temp;
-                        moves[moves.Count - 1].Xturn = !Xturn;
+                        moves[moves.Count - 1].XTurn = !XTurn;
                     }
                 }
             }
@@ -185,7 +185,7 @@ namespace MonteCarlo
                         var temp = moves[moves.Count - 1].Grid[y, x];
                         moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
                         moves[moves.Count - 1].Grid[y + 1, x - 1] = temp;
-                        moves[moves.Count - 1].Xturn = !Xturn;
+                        moves[moves.Count - 1].XTurn = !XTurn;
                     }
                     else if ((y < gridSize - 2 && x >= 2) && Grid[y + 1, x - 1] == Pieces.Blue && Grid[y + 2, x - 2] == Pieces.Empty) //Take
                     {
@@ -194,7 +194,7 @@ namespace MonteCarlo
                         moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
                         moves[moves.Count - 1].Grid[y + 1, x - 1] = Pieces.Empty;
                         moves[moves.Count - 1].Grid[y + 2, x - 2] = temp;
-                        moves[moves.Count - 1].Xturn = !Xturn;
+                        moves[moves.Count - 1].XTurn = !XTurn;
                     }
                 }
 
@@ -206,7 +206,7 @@ namespace MonteCarlo
                         var temp = moves[moves.Count - 1].Grid[y, x];
                         moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
                         moves[moves.Count - 1].Grid[y + 1, x + 1] = temp;
-                        moves[moves.Count - 1].Xturn = !Xturn;
+                        moves[moves.Count - 1].XTurn = !XTurn;
                     }
                     else if ((y < gridSize - 2 && x < gridSize - 2) && Grid[y + 1, x + 1] == Pieces.Blue && Grid[y + 2, x + 2] == Pieces.Empty) //Take
                     {
@@ -215,7 +215,7 @@ namespace MonteCarlo
                         moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
                         moves[moves.Count - 1].Grid[y + 1, x + 1] = Pieces.Empty;
                         moves[moves.Count - 1].Grid[y + 2, x + 2] = temp;
-                        moves[moves.Count - 1].Xturn = !Xturn;
+                        moves[moves.Count - 1].XTurn = !XTurn;
                     }
                 }
             }

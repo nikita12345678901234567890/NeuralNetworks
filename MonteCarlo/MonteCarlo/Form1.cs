@@ -95,14 +95,14 @@ namespace MonteCarlo
 
             Controls.Add(ResetButton);
 
-            Grid[0, 0].CheckState = CheckState.Checked;
-            Grid[1, 0].CheckState = CheckState.Indeterminate;
-            Grid[1, 1].CheckState = CheckState.Checked;
-            Grid[1, 2].CheckState = CheckState.Checked;
-            Grid[2, 0].CheckState = CheckState.Indeterminate;
-            Grid[2, 2].CheckState = CheckState.Indeterminate;
-            Game.UpdateGrid(convertGrid(), true);
-            updateCheckboxes();
+            //Grid[0, 0].CheckState = CheckState.Checked;
+            //Grid[1, 0].CheckState = CheckState.Indeterminate;
+            //Grid[1, 1].CheckState = CheckState.Checked;
+            //Grid[1, 2].CheckState = CheckState.Checked;
+            //Grid[2, 0].CheckState = CheckState.Indeterminate;
+            //Grid[2, 2].CheckState = CheckState.Indeterminate;
+            //Game.UpdateGrid(convertGrid(), true);
+            //updateCheckboxes();
         }
 
         void ClickTicTac(object sender, EventArgs e)
@@ -275,7 +275,7 @@ namespace MonteCarlo
             Button button = (Button)sender;
             Point position = (Point)button.Tag;
 
-            if (cGame.Xturn)
+            if (cGame.XTurn)
             {
                 if (!selected && cGame.Grid[position.Y, position.X] == Pieces.Blue)
                 {

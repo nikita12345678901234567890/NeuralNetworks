@@ -43,7 +43,7 @@ namespace MonteCarlo
         public int win { get; set; }
         public int number { get; set; }
 
-        public bool XTurn = true;
+        public bool XTurn { get; set; }
 
         int gridSize;
 
@@ -74,7 +74,9 @@ namespace MonteCarlo
 
         public double UCT()
         {
-            return (win / number) + IGameState<ToeTicTac>.C * (Math.Log(Parent.number) / number);
+            double w = win;
+            double n = number;
+            return (w / n) + IGameState<ToeTicTac>.C * (Math.Log(Parent.number) / n);
         }
 
         public ToeTicTac[] GetChildren()

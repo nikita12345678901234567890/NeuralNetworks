@@ -73,9 +73,12 @@ namespace MonteCarlo
                 
                 currentNode = currentNode.Children[random.Next(0, currentNode.Children.Count)];
             }
-            if (currentNode.XWin) return 1;
-            else if (currentNode.IsTie) return 0;
-            else return -1;
+            int value = 0;
+            if (currentNode.XWin) value = 1;
+            else if (currentNode.IsTie) value = 0;
+            else value = -1;
+            if (currentNode.XTurn) value *= -1;
+            return value;
         }
 
         private static void Backpropagate(int value, IGameState<T> simulatedNode)
