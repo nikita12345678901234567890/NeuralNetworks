@@ -130,6 +130,8 @@ namespace MonteCarlo
         {
             List<Chackers> moves = new List<Chackers>();
 
+            throw new Exception("reference problem!!!");
+
             if (Grid[y, x] == Pieces.Blue) //Player, bottom
             {
                 if (y >= 1 && x >= 1) //up left

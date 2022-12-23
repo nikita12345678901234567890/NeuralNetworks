@@ -72,13 +72,6 @@ namespace MonteCarlo
             CheckGameOver();
         }
 
-        public double UCT()
-        {
-            double w = win;
-            double n = number;
-            return (w / n) + IGameState<ToeTicTac>.C * (Math.Log(Parent.number) / n);
-        }
-
         public ToeTicTac[] GetChildren()
         {
             CheckGameOver();
@@ -259,6 +252,7 @@ namespace MonteCarlo
                     Value = 0;
                     break;
             }
+            if (XTurn) Value *= -1;
         }
 
         public void UpdateGrid(int[,] grid, bool XTurn)

@@ -16,7 +16,13 @@
 
         //Monte carlo stuff:
         bool IsExpanded { get; set; }
-        double UCT();
+        double UCT()
+        {
+            double w = win;
+            double n = number;
+            return (w / n) + (C * Math.Sqrt(Math.Log(Parent.number) / n));
+        }
+
         int win { get; set; }
         int number { get; set; }
         const double C = 1.5;
