@@ -66,14 +66,19 @@ namespace MonteCarlo
             IsExpanded = false;
         }
 
-        public double UCT()
+        public void setGrid(Pieces[,] source)
         {
-            return (win / number) + IGameState<Chackers>.C * (Math.Log(Parent.number) / number);
+            for (int y = 0; y < gridSize; y++)
+            {
+                for (int x = 0; x < gridSize; x++)
+                {
+                    Grid[y, x] = source[y, x];
+                }
+            }
         }
 
         public Chackers[] GetChildren()
         {
-            CheckGameOver();
             Children.Clear();
 
             if (!IsTerminal)
@@ -86,7 +91,9 @@ namespace MonteCarlo
                         {
                             var moves = GetMoves(x, y);
                             foreach (var Move in moves)
-                            { 
+                            {
+                                Move.Parent = this;
+                                Move.CheckGameOver();
                                 Children.Add(Move);
                             }
                         }
@@ -94,17 +101,19 @@ namespace MonteCarlo
                 }
             }
 
+            IsExpanded = true;
             return Children.ToArray();
         }
 
         public bool Move(Point piece, Point destination)
         {
-            GetChildren();
+            CheckGameOver();
+            var moves = GetMoves(piece.X, piece.Y);
 
             bool found = false;
-            foreach (var child in Children)
+            foreach (var move in moves)
             {
-                if (child.Grid[piece.Y, piece.X] == Pieces.Empty && child.Grid[destination.Y, destination.X] == (XTurn ? Pieces.Blue : Pieces.Red))
+                if (move.Grid[piece.Y, piece.X] == Pieces.Empty && move.Grid[destination.Y, destination.X] == (XTurn ? Pieces.Blue : Pieces.Red))
                 {
                     if (found)
                     {
@@ -118,19 +127,38 @@ namespace MonteCarlo
             Grid[destination.Y, destination.X] = Grid[piece.Y, piece.X];
             Grid[piece.Y, piece.X] = 0;
 
+            CheckGameOver();
+
             return true;
         }
 
         private void CheckGameOver()
-        { 
-            
+        {
+            GetChildren();
+
+            if (Children.Count == 0)
+            {
+                if (XTurn)
+                {
+                    aktuellStatte = Statte.OWin;
+                    Value = -1;
+                }
+                else
+                {
+                    aktuellStatte = Statte.XWin;
+                    Value = 1;
+                }
+            }
+            else
+            {
+                aktuellStatte = Statte.Gaming;
+                Value = 0;
+            }
         }
 
-        private Chackers[] GetMoves(int x, int y)  // this is dead to me
+        private Chackers[] GetMoves(int x, int y)
         {
             List<Chackers> moves = new List<Chackers>();
-
-            throw new Exception("reference problem!!!");
 
             if (Grid[y, x] == Pieces.Blue) //Player, bottom
             {
@@ -138,7 +166,8 @@ namespace MonteCarlo
                 {
                     if (Grid[y - 1, x - 1] == Pieces.Empty) //Move
                     {
-                        moves.Add(new Chackers(gridSize, Grid));
+                        moves.Add(new Chackers(gridSize));
+                        moves[moves.Count - 1].setGrid(Grid);
                         var temp = moves[moves.Count - 1].Grid[y, x];
                         moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
                         moves[moves.Count - 1].Grid[y - 1, x - 1] = temp;
@@ -146,7 +175,8 @@ namespace MonteCarlo
                     }
                     else if ((y >= 2 && x >= 2) && Grid[y - 1, x - 1] == Pieces.Red && Grid[y - 2, x - 2] == Pieces.Empty) //Take
                     {
-                        moves.Add(new Chackers(gridSize, Grid));
+                        moves.Add(new Chackers(gridSize));
+                        moves[moves.Count - 1].setGrid(Grid);
                         var temp = moves[moves.Count - 1].Grid[y, x];
                         moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
                         moves[moves.Count - 1].Grid[y - 1, x - 1] = Pieces.Empty;
@@ -159,7 +189,8 @@ namespace MonteCarlo
                 {
                     if (Grid[y - 1, x + 1] == Pieces.Empty) //Move
                     {
-                        moves.Add(new Chackers(gridSize, Grid));
+                        moves.Add(new Chackers(gridSize));
+                        moves[moves.Count - 1].setGrid(Grid);
                         var temp = moves[moves.Count - 1].Grid[y, x];
                         moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
                         moves[moves.Count - 1].Grid[y - 1, x + 1] = temp;
@@ -167,7 +198,8 @@ namespace MonteCarlo
                     }
                     else if ((y >= 2 && x < gridSize - 2) && Grid[y - 1, x + 1] == Pieces.Red && Grid[y - 2, x + 2] == Pieces.Empty) //Take
                     {
-                        moves.Add(new Chackers(gridSize, Grid));
+                        moves.Add(new Chackers(gridSize));
+                        moves[moves.Count - 1].setGrid(Grid);
                         var temp = moves[moves.Count - 1].Grid[y, x];
                         moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
                         moves[moves.Count - 1].Grid[y - 1, x + 1] = Pieces.Empty;
@@ -183,7 +215,8 @@ namespace MonteCarlo
                 {
                     if (Grid[y + 1, x - 1] == Pieces.Empty) //Move
                     {
-                        moves.Add(new Chackers(gridSize, Grid));
+                        moves.Add(new Chackers(gridSize));
+                        moves[moves.Count - 1].setGrid(Grid);
                         var temp = moves[moves.Count - 1].Grid[y, x];
                         moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
                         moves[moves.Count - 1].Grid[y + 1, x - 1] = temp;
@@ -191,7 +224,8 @@ namespace MonteCarlo
                     }
                     else if ((y < gridSize - 2 && x >= 2) && Grid[y + 1, x - 1] == Pieces.Blue && Grid[y + 2, x - 2] == Pieces.Empty) //Take
                     {
-                        moves.Add(new Chackers(gridSize, Grid));
+                        moves.Add(new Chackers(gridSize));
+                        moves[moves.Count - 1].setGrid(Grid);
                         var temp = moves[moves.Count - 1].Grid[y, x];
                         moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
                         moves[moves.Count - 1].Grid[y + 1, x - 1] = Pieces.Empty;
@@ -204,7 +238,8 @@ namespace MonteCarlo
                 {
                     if (Grid[y + 1, x + 1] == Pieces.Empty) //Move
                     {
-                        moves.Add(new Chackers(gridSize, Grid));
+                        moves.Add(new Chackers(gridSize));
+                        moves[moves.Count - 1].setGrid(Grid);
                         var temp = moves[moves.Count - 1].Grid[y, x];
                         moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
                         moves[moves.Count - 1].Grid[y + 1, x + 1] = temp;
@@ -212,7 +247,8 @@ namespace MonteCarlo
                     }
                     else if ((y < gridSize - 2 && x < gridSize - 2) && Grid[y + 1, x + 1] == Pieces.Blue && Grid[y + 2, x + 2] == Pieces.Empty) //Take
                     {
-                        moves.Add(new Chackers(gridSize, Grid));
+                        moves.Add(new Chackers(gridSize));
+                        moves[moves.Count - 1].setGrid(Grid);
                         var temp = moves[moves.Count - 1].Grid[y, x];
                         moves[moves.Count - 1].Grid[y, x] = Pieces.Empty;
                         moves[moves.Count - 1].Grid[y + 1, x + 1] = Pieces.Empty;
@@ -225,7 +261,7 @@ namespace MonteCarlo
             return moves.ToArray();
         }
 
-        public void ResetBoard()
+        public void ResetBoard(bool empty)
         {
             for (int y = 0; y < gridSize; y++)
             {
@@ -235,7 +271,7 @@ namespace MonteCarlo
                     {
                         Grid[y, x] = Pieces.Dead;
                     }
-                    else
+                    else if(!empty)
                     {
                         if (y <= 2)
                         {

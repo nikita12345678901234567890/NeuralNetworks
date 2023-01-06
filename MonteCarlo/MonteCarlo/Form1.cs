@@ -23,13 +23,15 @@ namespace MonteCarlo
         #region  Chackers
         const int cNumber = 8;
 
+        Chackers cGame = new Chackers(cNumber);
+
         Button[,] buttons;
         const int spacing = 50;
 
         bool selected = false;
         Point selectedPos = new Point();
 
-        Chackers cGame;
+        Monte<Chackers> MonChacker;
         #endregion
 
         Random random;
@@ -245,6 +247,8 @@ namespace MonteCarlo
         {
             Controls.Clear();
 
+            MonChacker = new Monte<Chackers>();
+
             this.BackColor = Color.Black;
             for (int y = 0; y < cNumber; y++)
             {
@@ -265,7 +269,11 @@ namespace MonteCarlo
                 }
             }
 
-            cGame.ResetBoard();
+            cGame.ResetBoard(true);
+
+            cGame.Grid[4, 6] = Pieces.Blue;
+            cGame.Grid[1, 5] = Pieces.Red;
+            cGame.Grid[3, 5] = Pieces.Red;
             UpdateGrid();
         }
 
@@ -288,6 +296,13 @@ namespace MonteCarlo
                     if (cGame.Move(selectedPos, position))
                     {
                         UpdateGrid();
+
+                        var possibilities = cGame.GetChildren();
+                        if (possibilities.Length != 0)
+                        {
+                            cGame = MonChacker.MCTS(5000, cGame);  //Monte called;
+                            UpdateGrid();
+                        }
                     }
                     else
                     {
