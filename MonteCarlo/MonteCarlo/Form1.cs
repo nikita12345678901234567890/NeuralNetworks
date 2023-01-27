@@ -15,7 +15,7 @@ namespace MonteCarlo
 
         int moveNum = 0;
 
-        Button ResetButton;
+        Button ResetButtonT;
 
         Monte<ToeTicTac> MonTicTac;
         #endregion
@@ -30,6 +30,8 @@ namespace MonteCarlo
 
         bool selected = false;
         Point selectedPos = new Point();
+
+        Button ResetButtonC;
 
         Monte<Chackers> MonChacker;
         #endregion
@@ -85,17 +87,17 @@ namespace MonteCarlo
                 }
             }
 
-            ResetButton = new Button();
-            ResetButton.Location = new Point(424, 94);
-            ResetButton.Visible = true;
-            ResetButton.Enabled = true;
-            ResetButton.Name = "ResetButton";
-            ResetButton.Size = new Size(75, 23);
-            ResetButton.Text = "Reset";
-            ResetButton.UseVisualStyleBackColor = true;
-            ResetButton.Click += ResetButtonClick;
+            ResetButtonT = new Button();
+            ResetButtonT.Location = new Point(424, 94);
+            ResetButtonT.Visible = true;
+            ResetButtonT.Enabled = true;
+            ResetButtonT.Name = "ResetButton";
+            ResetButtonT.Size = new Size(75, 23);
+            ResetButtonT.Text = "Reset";
+            ResetButtonT.UseVisualStyleBackColor = true;
+            ResetButtonT.Click += ResetButtonClick;
 
-            Controls.Add(ResetButton);
+            Controls.Add(ResetButtonT);
 
             //Grid[0, 0].CheckState = CheckState.Checked;
             //Grid[1, 0].CheckState = CheckState.Indeterminate;
@@ -269,12 +271,29 @@ namespace MonteCarlo
                 }
             }
 
+            ResetButtonC = new Button();
+            ResetButtonC.Location = new Point(424, 94);
+            ResetButtonC.Visible = true;
+            ResetButtonC.Enabled = true;
+            ResetButtonC.Name = "ResetButton";
+            ResetButtonC.Size = new Size(75, 23);
+            ResetButtonC.Text = "Reset";
+            ResetButtonC.UseVisualStyleBackColor = true;
+            ResetButtonC.Click += Reset;
+
+            Controls.Add(ResetButtonC);
+
             cGame.ResetBoard(true);
 
             cGame.Grid[4, 6] = Pieces.Blue;
             cGame.Grid[1, 5] = Pieces.Red;
             cGame.Grid[3, 5] = Pieces.Red;
             UpdateGrid();
+        }
+
+        void Reset(object sender, EventArgs e)
+        {
+            cGame.ResetBoard(false);
         }
 
         void ClickChackers(object sender, EventArgs e)

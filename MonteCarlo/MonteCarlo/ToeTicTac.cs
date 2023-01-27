@@ -126,7 +126,7 @@ namespace MonteCarlo
 
             return copy;
         }
-
+        
         public void CheckGameOver()
         {
             //Horizontal lines
@@ -253,7 +253,7 @@ namespace MonteCarlo
                     break;
             }
             if (XTurn) Value *= -1;
-        }
+        } 
 
         public void UpdateGrid(int[,] grid, bool XTurn)
         {

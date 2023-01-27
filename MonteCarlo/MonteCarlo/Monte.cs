@@ -12,7 +12,7 @@ namespace MonteCarlo
 
         public T MCTS(int iterations, T startingState)
         {
-            random = new Random();//2);
+            //random = new Random(2);
 
             //Generate the monte-carlo tree
             IGameState<T> rootNode = startingState;
@@ -23,9 +23,9 @@ namespace MonteCarlo
                 int value = Simulate(expandedChild);
                 Backpropagate(value, expandedChild);
             }
-            
+
             //return the best child
-            var sortedChildren = rootNode.Children.OrderByDescending((state) => state.win);
+            var sortedChildren = rootNode.Children.OrderByDescending((state) => state.number);
             var topChild = sortedChildren.First();
             return topChild;
         }
