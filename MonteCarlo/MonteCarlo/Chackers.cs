@@ -32,7 +32,7 @@ namespace MonteCarlo
 
         public bool OWin => aktuellStatte == Statte.OWin;
 
-        public bool IsTerminal => aktuellStatte != Statte.Gaming;
+        public bool IsTerminal => !IsExpanded || (IsExpanded && Children.Count == 0);//aktuellStatte != Statte.Gaming;
 
         public List<Chackers> Children { get; set; }
 
@@ -93,13 +93,14 @@ namespace MonteCarlo
                             foreach (var Move in moves)
                             {
                                 Move.Parent = this;
-                                Move.CheckGameOver();
+                                //Move.CheckGameOver();
                                 Children.Add(Move);
                             }
                         }
                     }
                 }
             }
+
 
             IsExpanded = true;
             return Children.ToArray();
@@ -109,6 +110,8 @@ namespace MonteCarlo
         {
             CheckGameOver();
             var moves = GetMoves(piece.X, piece.Y);
+
+            Chackers goodMove = null;
 
             bool found = false;
             foreach (var move in moves)
@@ -120,12 +123,12 @@ namespace MonteCarlo
                         throw new Exception("Multiple moves found");
                     }
                     found = true;
+                    goodMove = move;
                 }
             }
             if (!found) return false;
 
-            Grid[destination.Y, destination.X] = Grid[piece.Y, piece.X];
-            Grid[piece.Y, piece.X] = 0;
+            setGrid(goodMove.Grid);
 
             XTurn = !XTurn;
 
@@ -263,7 +266,7 @@ namespace MonteCarlo
             return moves.ToArray();
         }
 
-        public void ResetBoard(bool empty)
+        public void ResetBoard(bool empty = false)
         {
             for (int y = 0; y < gridSize; y++)
             {
@@ -273,19 +276,29 @@ namespace MonteCarlo
                     {
                         Grid[y, x] = Pieces.Dead;
                     }
-                    else if(!empty)
+                    else if (!empty)
                     {
                         if (y <= 2)
                         {
                             Grid[y, x] = Pieces.Red;
                         }
-                        if (y >= gridSize - 3)
+                        else if (y >= gridSize - 3)
                         {
                             Grid[y, x] = Pieces.Blue;
                         }
+                        else
+                        {
+                            Grid[y, x] = Pieces.Empty;
+                        }
+                    }
+                    else
+                    {
+                        Grid[y, x] = Pieces.Empty;
                     }
                 }
             }
+
+            XTurn = true;
         }
     }
 }
