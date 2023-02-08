@@ -285,15 +285,18 @@ namespace MonteCarlo
 
             cGame.ResetBoard(true);
 
-            cGame.Grid[4, 6] = Pieces.Blue;
-            cGame.Grid[1, 5] = Pieces.Red;
-            cGame.Grid[3, 5] = Pieces.Red;
+            cGame.Grid[3, 3] = Pieces.Blue;
+            cGame.Grid[2, 2] = Pieces.Blue;
+            cGame.Grid[1, 3] = Pieces.Red;
+            cGame.Grid[0, 4] = Pieces.Red;
             UpdateGrid();
         }
 
         void Reset(object sender, EventArgs e)
         {
-            cGame.ResetBoard(false);
+            cGame.ResetBoard();
+            UpdateGrid();
+            selected = false;
         }
 
         void ClickChackers(object sender, EventArgs e)

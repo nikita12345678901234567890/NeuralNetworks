@@ -32,7 +32,7 @@ namespace MonteCarlo
 
         public bool OWin => aktuellStatte == Statte.OWin;
 
-        public bool IsTerminal => !IsExpanded || (IsExpanded && Children.Count == 0);//aktuellStatte != Statte.Gaming;
+        public bool IsTerminal => (IsExpanded && Children.Count == 0);// || !IsExpanded;//aktuellStatte != Statte.Gaming;
 
         public List<Chackers> Children { get; set; }
 
@@ -79,10 +79,9 @@ namespace MonteCarlo
 
         public Chackers[] GetChildren()
         {
-            Children.Clear();
-
             if (!IsTerminal)
             {
+                Children.Clear();
                 for (int y = 0; y < gridSize; y++)
                 {
                     for (int x = 0; x < gridSize; x++)
