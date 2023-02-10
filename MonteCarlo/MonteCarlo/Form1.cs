@@ -318,13 +318,18 @@ namespace MonteCarlo
                     if (cGame.Move(selectedPos, position))
                     {
                         UpdateGrid();
+                        fish();
 
                         var possibilities = cGame.GetChildren();
                         if (possibilities.Length != 0)
                         {
-                            cGame = MonChacker.MCTS(5000, cGame);  //Monte called;
+                            cGame = MonChacker.MCTS(50000, cGame);  //Monte called;
                             UpdateGrid();
+
+                            fish();
                         }
+
+                        selected = false;
                     }
                     else
                     {
@@ -336,6 +341,28 @@ namespace MonteCarlo
                 {
                     selected = false;
                     UpdateGrid();
+                }
+            }
+        }
+
+        void fish()
+        {
+            cGame.CheckGameOver();
+            if (cGame.aktuellStatte != Statte.Gaming)
+            {
+                switch(cGame.aktuellStatte)
+                {
+                    case Statte.XWin:
+                        MessageBox.Show("You won, so I failed.");
+                        break;
+
+                    case Statte.OWin:
+                        MessageBox.Show("IT WORKS!!!!");
+                        break;
+
+                    case Statte.Tie:
+                        MessageBox.Show("I don't know how  you did it, but you tied.");
+                        break;
                 }
             }
         }

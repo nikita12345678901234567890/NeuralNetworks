@@ -67,6 +67,7 @@ namespace MonteCarlo
 
         private int Simulate(IGameState<T> currentNode)
         {
+            currentNode.GetChildren();
             while (!currentNode.IsTerminal)
             {
                 currentNode.GetChildren();
