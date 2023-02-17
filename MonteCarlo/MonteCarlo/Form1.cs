@@ -283,12 +283,12 @@ namespace MonteCarlo
 
             Controls.Add(ResetButtonC);
 
-            cGame.ResetBoard(true);
+            cGame.ResetBoard(false);
 
-            cGame.Grid[3, 3] = Pieces.Blue;
-            cGame.Grid[2, 2] = Pieces.Blue;
-            cGame.Grid[1, 3] = Pieces.Red;
-            cGame.Grid[0, 4] = Pieces.Red;
+            //cGame.Grid[3, 3] = Pieces.Blue;
+            //cGame.Grid[2, 2] = Pieces.Blue;
+            //cGame.Grid[1, 3] = Pieces.Red;
+            //cGame.Grid[0, 4] = Pieces.Red;
             UpdateGrid();
         }
 
@@ -297,6 +297,8 @@ namespace MonteCarlo
             cGame.ResetBoard();
             UpdateGrid();
             selected = false;
+
+            cGame.Children.Clear();
         }
 
         void ClickChackers(object sender, EventArgs e)
@@ -323,7 +325,7 @@ namespace MonteCarlo
                         var possibilities = cGame.GetChildren();
                         if (possibilities.Length != 0)
                         {
-                            cGame = MonChacker.MCTS(50000, cGame);  //Monte called;
+                            cGame = MonChacker.MCTS(1600, cGame);  //Monte called;
                             UpdateGrid();
 
                             fish();
@@ -361,7 +363,7 @@ namespace MonteCarlo
                         break;
 
                     case Statte.Tie:
-                        MessageBox.Show("I don't know how  you did it, but you tied.");
+                        MessageBox.Show("I don't know how you did it, but you tied.");
                         break;
                 }
             }

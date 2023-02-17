@@ -14,7 +14,7 @@ namespace MonteCarlo
         Blue,
         Red
     }
-
+    //Make point system, king = 5 points.
     public class Chackers : IGameState<Chackers> //Player = X = Blue
     {
         private int gridSize;
@@ -66,6 +66,18 @@ namespace MonteCarlo
             IsExpanded = false;
         }
 
+        public void copy(Chackers chacker)
+        {
+            XTurn = chacker.XTurn;
+            this.gridSize = chacker.gridSize;
+            setGrid(chacker.Grid);
+            Children = new List<Chackers>();
+
+            this.number = 1;
+            win = 0;
+            IsExpanded = false;
+        }
+
         public void setGrid(Pieces[,] source)
         {
             for (int y = 0; y < gridSize; y++)
@@ -109,7 +121,7 @@ namespace MonteCarlo
             CheckGameOver();
             var moves = GetMoves(piece.X, piece.Y);
 
-            Chackers goodMove = null;
+            Chackers goodMove = new Chackers(number, Grid);
 
             bool found = false;
             foreach (var move in moves)
@@ -126,9 +138,7 @@ namespace MonteCarlo
             }
             if (!found) return false;
 
-            setGrid(goodMove.Grid);
-
-            XTurn = !XTurn;
+            copy(goodMove);
 
             CheckGameOver();
 
