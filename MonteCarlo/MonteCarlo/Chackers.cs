@@ -14,7 +14,7 @@ namespace MonteCarlo
         Blue,
         Red
     }
-    //Make point system, king = 5 points.
+    
     public class Chackers : IGameState<Chackers> //Player = X = Blue
     {
         private int gridSize;
@@ -52,6 +52,10 @@ namespace MonteCarlo
             this.number = 1;
             win = 0;
             IsExpanded = false;
+
+            ResetBoard();
+
+            Numbers();
         }
 
         public Chackers(int number, Pieces[,] Grid)
@@ -65,6 +69,9 @@ namespace MonteCarlo
             win = 0;
             IsExpanded = false;
         }
+
+        public int Red { get; private set; }
+        public int Blue { get; private set; }
 
         public void copy(Chackers chacker)
         {
@@ -91,7 +98,7 @@ namespace MonteCarlo
 
         public Chackers[] GetChildren()
         {
-            if (Children.Count == 0)//!IsTerminal)
+            if (Children.Count == 0)
             {
                 for (int y = 0; y < gridSize; y++)
                 {
@@ -103,7 +110,6 @@ namespace MonteCarlo
                             foreach (var Move in moves)
                             {
                                 Move.Parent = this;
-                                //Move.CheckGameOver();
                                 Children.Add(Move);
                             }
                         }
@@ -149,23 +155,48 @@ namespace MonteCarlo
         {
             GetChildren();
 
-            if (Children.Count == 0)
+            Numbers();
+
+            if (IsTerminal)
             {
-                if (XTurn)
+                if (Red > Blue)
                 {
                     aktuellStatte = Statte.OWin;
                     Value = -1;
                 }
-                else
+                else if (Blue > Red)
                 {
                     aktuellStatte = Statte.XWin;
                     Value = 1;
                 }
+                else
+                {
+                    aktuellStatte = Statte.Gaming;
+                    Value = 0;
+                }
             }
-            else
+        }
+
+        public void Numbers()
+        {
+            Red = 0;
+            Blue = 0;
+
+            for (int y = 0; y < gridSize; y++)
             {
-                aktuellStatte = Statte.Gaming;
-                Value = 0;
+                for (int x = 0; x < gridSize; x++)
+                {
+                    if (Grid[y, x] == Pieces.Red)
+                    {
+                        Red++;
+                        if (y == 7) Red += 4;
+                    }
+                    else if (Grid[y, x] == Pieces.Blue)
+                    {
+                        Blue++;
+                        if (y == 0) Blue += 4;
+                    }
+                }
             }
         }
 

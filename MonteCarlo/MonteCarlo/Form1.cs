@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Runtime.CompilerServices;
 
 namespace MonteCarlo
@@ -247,7 +248,9 @@ namespace MonteCarlo
 
         void LoadChackers()
         {
-            Controls.Clear();
+            //Controls.Clear();
+            ChackersButton.Visible = false;
+            TicTacButton.Visible = false;
 
             MonChacker = new Monte<Chackers>();
 
@@ -285,6 +288,11 @@ namespace MonteCarlo
 
             cGame.ResetBoard(false);
 
+            Red.Visible = true;
+            Red.Text = cGame.Red.ToString();
+            Blue.Visible = true;
+            Blue.Text = cGame.Blue.ToString();
+
             //cGame.Grid[3, 3] = Pieces.Blue;
             //cGame.Grid[2, 2] = Pieces.Blue;
             //cGame.Grid[1, 3] = Pieces.Red;
@@ -299,6 +307,9 @@ namespace MonteCarlo
             selected = false;
 
             cGame.Children.Clear();
+
+            Red.Text = cGame.Red.ToString();
+            Blue.Text = cGame.Blue.ToString();
         }
 
         void ClickChackers(object sender, EventArgs e)
@@ -400,6 +411,11 @@ namespace MonteCarlo
                     }
                 }
             }
+
+            cGame.Numbers();
+
+            Red.Text = cGame.Red.ToString();
+            Blue.Text = cGame.Blue.ToString();
         }
 
         #endregion
