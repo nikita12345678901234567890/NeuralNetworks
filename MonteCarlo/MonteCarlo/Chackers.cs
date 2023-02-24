@@ -171,7 +171,7 @@ namespace MonteCarlo
                 }
                 else
                 {
-                    aktuellStatte = Statte.Gaming;
+                    aktuellStatte = Statte.Tie;
                     Value = 0;
                 }
             }
@@ -338,6 +338,8 @@ namespace MonteCarlo
             }
 
             XTurn = true;
+
+            aktuellStatte = Statte.Gaming;
         }
     }
 }
