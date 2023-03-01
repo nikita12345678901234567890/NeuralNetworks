@@ -27,41 +27,50 @@ namespace Genetic_art
 
         public void Mutate(Random random)
         {
-            if (random.NextDouble() <= Constants.mutateColor)
+            if (random.NextDouble() <= Constants.mutateColorChance)
             {
                 switch (random.NextDouble())
                 {
                     case < 0.25://I love this
-
+                        color = Color.FromArgb(color.A + random.Next(-Constants.mutateColorBounds, Constants.mutateColorBounds), color);
                         break;
 
                     case < 0.5:
-
+                        color = Color.FromArgb(color.A, color.R + random.Next(-Constants.mutateColorBounds, Constants.mutateColorBounds), color.G, color.B);
                         break;
 
                     case < 0.75:
-
+                        color = Color.FromArgb(color.A, color.R, color.G + random.Next(-Constants.mutateColorBounds, Constants.mutateColorBounds), color.B);
                         break;
 
                     default:
-
+                        color = Color.FromArgb(color.A, color.R, color.G, color.B + random.Next(-Constants.mutateColorBounds, Constants.mutateColorBounds));
                         break;
                 }
             }
             else
             {
-                
+                int point = (int)(random.NextDouble() * 2.999999f);
+
+                if (random.NextDouble() < 0.5f)
+                {
+                    points[point].X = (float)random.NextDouble();
+                }
+                else
+                {
+                    points[point].Y = (float)random.NextDouble();
+                }
             }
         }
 
-        public Triangle Copy()
+        /*public Triangle Copy()
         {
-        
-        }
+            
+        }*/
 
         public static Triangle RandomTriangle(Random random)
         {
-        
+            
         }
     }
 }

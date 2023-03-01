@@ -8,6 +8,7 @@ namespace Genetic_art
 {
     public static class Constants
     {
-        public static float mutateColor = 0.5f;//vs mutating points
+        public static float mutateColorChance = 0.5f;//vs mutating points
+        public static int mutateColorBounds = 13;
     }
 }
