@@ -70,7 +70,10 @@ namespace Genetic_art
 
         public static Triangle RandomTriangle(Random random)
         {
-            
+            return new Triangle(new PointF((float)random.NextDouble(), (float)random.NextDouble()), 
+                                new PointF((float)random.NextDouble(), (float)random.NextDouble()), 
+                                new PointF((float)random.NextDouble(), (float)random.NextDouble()), 
+                                Color.FromArgb(random.Next(Constants.minAlpha, 255), random.Next(0, 255), random.Next(0, 255), random.Next(0, 255)));
         }
     }
 }
