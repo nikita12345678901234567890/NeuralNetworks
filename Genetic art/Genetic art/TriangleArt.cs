@@ -38,7 +38,9 @@ namespace Genetic_art
 
         public Bitmap DrawImage(int width, int height)
         {
-            
+            Bitmap bitmap = new Bitmap(width, height);
+
+            Graphics Gary = 
         }
 
         public void CopyTo(TriangleArt other)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace Genetic_art
 
         public void DrawTriangle(Graphics gfx, float xCoefficent, float yCoefficent)
         {
-            gfx.FillPolygon(new SolidBrush(color), points);
+            gfx.FillPolygon(new SolidBrush(color), points.Select((m) => new PointF(m.X * xCoefficent, m.Y * yCoefficent)).ToArray());
         }
 
         public void Mutate(Random random)
@@ -68,12 +69,11 @@ namespace Genetic_art
             
         }*/
 
-        public static Triangle RandomTriangle(Random random)
-        {
-            return new Triangle(new PointF((float)random.NextDouble(), (float)random.NextDouble()), 
-                                new PointF((float)random.NextDouble(), (float)random.NextDouble()), 
-                                new PointF((float)random.NextDouble(), (float)random.NextDouble()), 
-                                Color.FromArgb(random.Next(Constants.minAlpha, 255), random.Next(0, 255), random.Next(0, 255), random.Next(0, 255)));
-        }
+        public static Triangle RandomTriangle(Random random)        
+            => new Triangle(new PointF((float)random.NextDouble(), (float)random.NextDouble()), 
+                            new PointF((float)random.NextDouble(), (float)random.NextDouble()), 
+                            new PointF((float)random.NextDouble(), (float)random.NextDouble()), 
+                            Color.FromArgb(random.Next(Constants.minAlpha, 255), random.Next(0, 255), random.Next(0, 255), random.Next(0, 255)));
+        
     }
 }
