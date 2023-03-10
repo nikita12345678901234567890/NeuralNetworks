@@ -40,7 +40,9 @@ namespace Genetic_art
         {
             Bitmap bitmap = new Bitmap(width, height);
 
-            Graphics Gary = 
+            Graphics Gary = Graphics.FromImage(bitmap);
+
+            Gary.Clear(Constants.backgroundColor)
         }
 
         public void CopyTo(TriangleArt other)

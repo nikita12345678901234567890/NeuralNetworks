@@ -23,7 +23,7 @@ namespace Genetic_art
 
         public void DrawTriangle(Graphics gfx, float xCoefficent, float yCoefficent)
         {
-            gfx.FillPolygon(new SolidBrush(color), points.Select((m) => new PointF(m.X * xCoefficent, m.Y * yCoefficent)).ToArray());
+            gfx.FillPolygon(new SolidBrush(color), points.Select((m) => new Point((int)(m.X * xCoefficent), (int)(m.Y * yCoefficent))).ToArray());
         }
 
         public void Mutate(Random random)

@@ -16,5 +16,7 @@ namespace Genetic_art
         public const float addChance = 0.4f;
         public const float mutateChance = 0.2f + addChance;
         public const float removeChance = 1 - (addChance + mutateChance);
+
+        public static Color backgroundColor = Color.Chocolate;
     }
 }
