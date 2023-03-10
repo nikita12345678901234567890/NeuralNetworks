@@ -41,18 +41,43 @@ namespace Genetic_art
             Bitmap bitmap = new Bitmap(width, height);
 
             Graphics Gary = Graphics.FromImage(bitmap);
+            Gary.Clear(Constants.backgroundColor);
 
-            Gary.Clear(Constants.backgroundColor)
+            foreach (Triangle triangle in triangles)
+            {
+                triangle.DrawTriangle(Gary, width, height);
+            }
+
+            return bitmap;
         }
 
+        /*
         public void CopyTo(TriangleArt other)
         {
             
         }
+        */
 
         public double GetError()
         {
-            
+            Bitmap image = DrawImage(originalImage.Width, originalImage.Height);
+
+            int sumError = 0;
+
+            for (int y = 0; y < originalImage.Height; y++)
+            {
+                for (int x = 0; x < originalImage.Width; x++)
+                {
+                    int pixelErrorSum = (originalImage.GetPixel(x, y).A - image.GetPixel(x, y).A)
+                                        + (originalImage.GetPixel(x, y).R - image.GetPixel(x, y).R)
+                                        + (originalImage.GetPixel(x, y).G - image.GetPixel(x, y).G)
+                                        + (originalImage.GetPixel(x, y).B - image.GetPixel(x, y).B);
+                    int pixelError = pixelErrorSum * pixelErrorSum;
+                    sumError += pixelError;
+                }
+            }
+
+            return sumError / (originalImage.Width * originalImage.Height);
         }
     }
 }
