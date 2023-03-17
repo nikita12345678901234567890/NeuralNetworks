@@ -11,10 +11,12 @@ namespace Genetic_art
         int maxTriangles;
         List<Triangle> triangles;
         Bitmap originalImage;
+
         public TriangleArt(int maxTriangles, Bitmap originalImage)
         {
             this.maxTriangles = maxTriangles;
             this.originalImage = originalImage;
+            triangles = new List<Triangle>();
         }
 
         public void Mutate(Random random)
@@ -27,11 +29,17 @@ namespace Genetic_art
                     break;
 
                 case < Constants.mutateChance:
-                    triangles[random.Next(0, triangles.Count)].Mutate(random);
+                    if (triangles.Count > 0)
+                    {
+                        triangles[random.Next(0, triangles.Count)].Mutate(random);
+                    }
                     break;
 
                 default://remove
-                    triangles.RemoveAt(random.Next(0, triangles.Count));
+                    if (triangles.Count > 0)
+                    {
+                        triangles.RemoveAt(random.Next(0, triangles.Count));
+                    }
                     break;
             }
         }
@@ -60,7 +68,30 @@ namespace Genetic_art
 
         public double GetError()
         {
-            Bitmap image = DrawImage(originalImage.Width, originalImage.Height);
+            System.Drawing.Imaging.BitmapData originalData = originalImage.LockBits(
+                                                        new Rectangle(0, 0, (int)originalImage.HorizontalResolution, (int)originalImage.VerticalResolution), 
+                                                        System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format16bppArgb1555);
+
+            System.Drawing.Imaging.BitmapData MyData = originalImage.LockBits(
+                                                        new Rectangle(0, 0, (int)originalImage.HorizontalResolution, (int)originalImage.VerticalResolution),
+                                                        System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format16bppArgb1555);
+
+            // Get the address of the first line.
+            IntPtr ptr1 = originalData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int bytes = Math.Abs(originalData.Stride) * (int)originalImage.VerticalResolution;
+            byte[] rgbValues = new byte[bytes];
+
+
+            for (int i = 0; i < rgbValues.Length; i+= 3)
+            {
+                rgbValues[i] = 255;
+            }
+                
+
+
+            //Bitmap image = DrawImage(originalImage.Width, originalImage.Height);
 
             int sumError = 0;
 

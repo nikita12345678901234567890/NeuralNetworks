@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.Original = new System.Windows.Forms.PictureBox();
             this.Output = new System.Windows.Forms.PictureBox();
+            this.doButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.Original)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Output)).BeginInit();
             this.SuspendLayout();
@@ -54,11 +55,22 @@
             this.Output.TabIndex = 1;
             this.Output.TabStop = false;
             // 
+            // doButton
+            // 
+            this.doButton.Location = new System.Drawing.Point(1054, 12);
+            this.doButton.Name = "doButton";
+            this.doButton.Size = new System.Drawing.Size(75, 23);
+            this.doButton.TabIndex = 2;
+            this.doButton.Text = "Do";
+            this.doButton.UseVisualStyleBackColor = true;
+            this.doButton.Click += new System.EventHandler(this.doButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1060, 609);
+            this.ClientSize = new System.Drawing.Size(1207, 609);
+            this.Controls.Add(this.doButton);
             this.Controls.Add(this.Output);
             this.Controls.Add(this.Original);
             this.Name = "Form1";
@@ -73,5 +85,6 @@
 
         private PictureBox Original;
         private PictureBox Output;
+        private Button doButton;
     }
 }

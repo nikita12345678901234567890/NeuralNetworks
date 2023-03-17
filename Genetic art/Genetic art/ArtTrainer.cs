@@ -28,11 +28,13 @@ namespace Genetic_art
             for (int i = 0; i < population.Length; i++)
             {
                 if (i == bestIndex) i++;
-
-                population[i].Mutate(random);
+                else
+                {
+                    population[i].Mutate(random);
+                }
             }
 
-            updateBest();
+            //updateBest();
         }
 
         private void updateBest()

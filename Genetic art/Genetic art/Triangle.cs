@@ -33,19 +33,19 @@ namespace Genetic_art
                 switch (random.NextDouble())
                 {
                     case < 0.25://I love this
-                        color = Color.FromArgb(color.A + random.Next(-Constants.mutateColorBounds, Constants.mutateColorBounds), color);
+                        color = Color.FromArgb(mutateColor(color.A, random), color);
                         break;
 
                     case < 0.5:
-                        color = Color.FromArgb(color.A, color.R + random.Next(-Constants.mutateColorBounds, Constants.mutateColorBounds), color.G, color.B);
+                        color = Color.FromArgb(color.A, mutateColor(color.R, random), color.G, color.B);
                         break;
 
                     case < 0.75:
-                        color = Color.FromArgb(color.A, color.R, color.G + random.Next(-Constants.mutateColorBounds, Constants.mutateColorBounds), color.B);
+                        color = Color.FromArgb(color.A, color.R, mutateColor(color.G, random), color.B);
                         break;
 
                     default:
-                        color = Color.FromArgb(color.A, color.R, color.G, color.B + random.Next(-Constants.mutateColorBounds, Constants.mutateColorBounds));
+                        color = Color.FromArgb(color.A, color.R, color.G, mutateColor(color.B, random));
                         break;
                 }
             }
@@ -64,10 +64,15 @@ namespace Genetic_art
             }
         }
 
-        /*public Triangle Copy()
+        public int mutateColor(int value, Random random)
         {
-            
-        }*/
+            int result = value + random.Next(-Constants.mutateColorBounds, Constants.mutateColorBounds);
+
+            if (value < 0) value = 0;
+            else if (value > 255) value = 255;
+
+            return value;
+        }
 
         public static Triangle RandomTriangle(Random random)        
             => new Triangle(new PointF((float)random.NextDouble(), (float)random.NextDouble()), 
