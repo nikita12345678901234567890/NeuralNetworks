@@ -69,46 +69,39 @@ namespace Genetic_art
         public double GetError()
         {
             System.Drawing.Imaging.BitmapData originalData = originalImage.LockBits(
-                                                        new Rectangle(0, 0, (int)originalImage.HorizontalResolution, (int)originalImage.VerticalResolution), 
+                                                        new Rectangle(0, 0, (int)originalImage.HorizontalResolution, (int)originalImage.VerticalResolution),
                                                         System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format16bppArgb1555);
 
-            System.Drawing.Imaging.BitmapData MyData = originalImage.LockBits(
+            System.Drawing.Imaging.BitmapData myData = DrawImage(originalImage.Width, originalImage.Height).LockBits(
                                                         new Rectangle(0, 0, (int)originalImage.HorizontalResolution, (int)originalImage.VerticalResolution),
                                                         System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format16bppArgb1555);
 
             // Get the address of the first line.
-            IntPtr ptr1 = originalData.Scan0;
+            IntPtr ptr1 = myData.Scan0;
+            IntPtr ptr2 = originalData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = Math.Abs(originalData.Stride) * (int)originalImage.VerticalResolution;
-            byte[] rgbValues = new byte[bytes];
+            int bytes1 = Math.Abs(myData.Stride) * (int)originalImage.VerticalResolution;
+            byte[] myRgbValues = new byte[bytes1];
 
-
-            for (int i = 0; i < rgbValues.Length; i+= 3)
-            {
-                rgbValues[i] = 255;
-            }
-                
+            int bytes2 = Math.Abs(originalData.Stride) * (int)originalImage.VerticalResolution;
+            byte[] originalRgbValues = new byte[bytes2];
 
 
             //Bitmap image = DrawImage(originalImage.Width, originalImage.Height);
 
             int sumError = 0;
 
-            for (int y = 0; y < originalImage.Height; y++)
+            for (int i = 0; i < myRgbValues.Length; i++)
             {
-                for (int x = 0; x < originalImage.Width; x++)
-                {
-                    int pixelErrorSum = (originalImage.GetPixel(x, y).A - image.GetPixel(x, y).A)
-                                        + (originalImage.GetPixel(x, y).R - image.GetPixel(x, y).R)
-                                        + (originalImage.GetPixel(x, y).G - image.GetPixel(x, y).G)
-                                        + (originalImage.GetPixel(x, y).B - image.GetPixel(x, y).B);
-                    int pixelError = pixelErrorSum * pixelErrorSum;
-                    sumError += pixelError;
-                }
+                int pixelErrorSum = originalRgbValues[i] - myRgbValues[i];
+                int pixelError = pixelErrorSum * pixelErrorSum;
+                sumError += pixelError;
             }
 
-            return sumError / (originalImage.Width * originalImage.Height);
+            originalImage.UnlockBits(originalData);
+
+            return sumError / (originalImage.HorizontalResolution * originalImage.VerticalResolution);
         }
     }
 }

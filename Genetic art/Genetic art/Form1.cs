@@ -9,7 +9,7 @@ namespace Genetic_art
         {
             InitializeComponent();
             Image = new Bitmap(Original.Image);
-            Image.LockBits(new Rectangle(0, 0, (int)Original.Image.HorizontalResolution, (int)Original.Image.VerticalResolution), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format16bppArgb1555);
+            
             moira = new ArtTrainer(Image, 13, 10);
         }
 
