@@ -10,19 +10,20 @@ namespace Genetic_art
             InitializeComponent();
             Image = new Bitmap(Original.Image);
             
-            moira = new ArtTrainer(Image, 13, 10);
+            moira = new ArtTrainer(Image, 4, 10);
         }
 
         private void doButton_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 10; i++)
             {
-                moira.Train(random);
-                Output.Image = moira.GetBestImage(Output.Width, Output.Height);
-                Output.Update();
-            }
+                iLabel.Text = i.ToString();
+                iLabel.Update();
 
-            Output.Image = moira.GetBestImage(Output.Width, Output.Height);
+                moira.Train(random);
+                Output1.Image = moira.GetBestImage(Original.Image.Width, Original.Image.Height);//Output.Width, Output.Height);
+                Output1.Update();
+            }
         }
     }
 }

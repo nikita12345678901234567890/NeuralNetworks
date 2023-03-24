@@ -68,12 +68,34 @@ namespace Genetic_art
 
         public double GetError()
         {
+            ///*
+            Bitmap image = DrawImage(originalImage.Width, originalImage.Height);
+
+            int sumError = 0;
+
+            for (int y = 0; y < originalImage.Height; y++)
+            {
+                for (int x = 0; x < originalImage.Width; x++)
+                {
+                    int pixelErrorSum = (originalImage.GetPixel(x, y).A - image.GetPixel(x, y).A)
+                                        + (originalImage.GetPixel(x, y).R - image.GetPixel(x, y).R)
+                                        + (originalImage.GetPixel(x, y).G - image.GetPixel(x, y).G)
+                                        + (originalImage.GetPixel(x, y).B - image.GetPixel(x, y).B);
+                    int pixelError = pixelErrorSum * pixelErrorSum;
+                    sumError += pixelError;
+                }
+            }
+
+            return sumError / (originalImage.Width * originalImage.Height);
+            //*/
+
+            /* Optimisation, do later
             System.Drawing.Imaging.BitmapData originalData = originalImage.LockBits(
-                                                        new Rectangle(0, 0, (int)originalImage.HorizontalResolution, (int)originalImage.VerticalResolution),
+                                                        new Rectangle(0, 0, originalImage.Width, originalImage.Height),
                                                         System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format16bppArgb1555);
 
             System.Drawing.Imaging.BitmapData myData = DrawImage(originalImage.Width, originalImage.Height).LockBits(
-                                                        new Rectangle(0, 0, (int)originalImage.HorizontalResolution, (int)originalImage.VerticalResolution),
+                                                        new Rectangle(0, 0, originalImage.Width, originalImage.Height),
                                                         System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format16bppArgb1555);
 
             // Get the address of the first line.
@@ -81,10 +103,10 @@ namespace Genetic_art
             IntPtr ptr2 = originalData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes1 = Math.Abs(myData.Stride) * (int)originalImage.VerticalResolution;
+            int bytes1 = Math.Abs(myData.Stride) * originalImage.Height;
             byte[] myRgbValues = new byte[bytes1];
 
-            int bytes2 = Math.Abs(originalData.Stride) * (int)originalImage.VerticalResolution;
+            int bytes2 = Math.Abs(originalData.Stride) * originalImage.Height;
             byte[] originalRgbValues = new byte[bytes2];
 
 
@@ -101,7 +123,8 @@ namespace Genetic_art
 
             originalImage.UnlockBits(originalData);
 
-            return sumError / (originalImage.HorizontalResolution * originalImage.VerticalResolution);
+            return sumError / (originalImage.Width * originalImage.Height);
+            //*/
         }
     }
 }
