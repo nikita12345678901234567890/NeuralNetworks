@@ -59,12 +59,15 @@ namespace Genetic_art
             return bitmap;
         }
 
-        /*
         public void CopyTo(TriangleArt other)
         {
-            
+            other.triangles.Clear();
+
+            for (int i = 0; i < triangles.Count; i++)
+            {
+                other.triangles.Add(triangles[i].copy());
+            }
         }
-        */
 
         public double GetError()
         {

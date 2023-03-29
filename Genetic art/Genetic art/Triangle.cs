@@ -79,6 +79,12 @@ namespace Genetic_art
                             new PointF((float)random.NextDouble(), (float)random.NextDouble()), 
                             new PointF((float)random.NextDouble(), (float)random.NextDouble()), 
                             Color.FromArgb(random.Next(Constants.minAlpha, 255), random.Next(0, 255), random.Next(0, 255), random.Next(0, 255)));
-        
+
+        public Triangle copy()
+        {
+            Triangle fish = new Triangle(new PointF(points[0].X, points[0].Y), new PointF(points[1].X, points[1].Y), new PointF(points[2].X, points[2].Y), color);
+
+            return fish;
+        }
     }
 }

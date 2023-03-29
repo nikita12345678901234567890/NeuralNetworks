@@ -24,6 +24,7 @@ namespace Genetic_art
         public void Train(Random random)
         {
             updateBest();
+            setToBest();
 
             for (int i = 0; i < population.Length; i++)
             {
@@ -59,6 +60,22 @@ namespace Genetic_art
             updateBest();
 
             return population[bestIndex].DrawImage(x, y);
+        }
+
+        private void setToBest()
+        {
+            for (int i = 0; i < population.Length; i++)
+            {
+                if (i != bestIndex)
+                {
+                    population[bestIndex].CopyTo(population[i]);
+                }
+            }
+        }
+
+        public Bitmap GetImage(int x, int y, int index)
+        {
+            return population[index].DrawImage(x, y);
         }
     }
 }
