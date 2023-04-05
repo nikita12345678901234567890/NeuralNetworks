@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,7 +26,7 @@ namespace Genetic_art
             {
                 case < Constants.addChance:
                     triangles.Add(Triangle.RandomTriangle(random));
-                    if (triangles.Count >= maxTriangles) triangles.RemoveAt(0);
+                    if (triangles.Count > maxTriangles) triangles.RemoveAt(0);
                     break;
 
                 case < Constants.mutateChance:
@@ -80,10 +81,10 @@ namespace Genetic_art
             {
                 for (int x = 0; x < originalImage.Width; x++)
                 {
-                    int pixelErrorSum = (originalImage.GetPixel(x, y).A - image.GetPixel(x, y).A)
-                                        + (originalImage.GetPixel(x, y).R - image.GetPixel(x, y).R)
-                                        + (originalImage.GetPixel(x, y).G - image.GetPixel(x, y).G)
-                                        + (originalImage.GetPixel(x, y).B - image.GetPixel(x, y).B);
+                    int pixelErrorSum = Math.Abs(originalImage.GetPixel(x, y).A - image.GetPixel(x, y).A)
+                                        + Math.Abs(originalImage.GetPixel(x, y).R - image.GetPixel(x, y).R)
+                                        + Math.Abs(originalImage.GetPixel(x, y).G - image.GetPixel(x, y).G)
+                                        + Math.Abs(originalImage.GetPixel(x, y).B - image.GetPixel(x, y).B);
                     int pixelError = pixelErrorSum * pixelErrorSum;
                     sumError += pixelError;
                 }
@@ -126,7 +127,7 @@ namespace Genetic_art
 
             originalImage.UnlockBits(originalData);
 
-            return sumError / (originalImage.Width * originalImage.Height);
+            return (int)((double)sumError / (originalImage.Width * originalImage.Height));
             //*/
         }
     }

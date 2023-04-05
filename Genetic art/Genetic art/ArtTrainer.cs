@@ -9,8 +9,8 @@ namespace Genetic_art
     public class ArtTrainer
     {
         TriangleArt[] population;
-        
-        int bestIndex = 0;
+
+        public int bestIndex { get; private set; }
 
         public ArtTrainer(Bitmap orignalImage, int maxTriangles, int populationSize)
         {
@@ -19,6 +19,8 @@ namespace Genetic_art
             {
                 population[i] = new TriangleArt(maxTriangles, orignalImage);
             }
+
+            bestIndex = 0;
         }
 
         public void Train(Random random)
@@ -28,7 +30,7 @@ namespace Genetic_art
 
             for (int i = 0; i < population.Length; i++)
             {
-                if (i == bestIndex) i++;
+                if (i == bestIndex) continue;
                 else
                 {
                     population[i].Mutate(random);
