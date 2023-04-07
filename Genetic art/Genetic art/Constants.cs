@@ -9,7 +9,7 @@ namespace Genetic_art
     public static class Constants
     {
         public const float mutateColorChance = 0.5f;//vs mutating points
-        public const int mutateColorBounds = 100;//25;
+        public const int mutateColorBounds = 25;//25;
 
         public const int minAlpha = 255;//for random triangle
 
@@ -17,8 +17,8 @@ namespace Genetic_art
         public const float mutateChance = 0.7f + addChance;
         public const float removeChance = 1 - (addChance + mutateChance);
 
-        public static Color backgroundColor = Color.LightGray;
+        public static Color backgroundColor = Color.White;
 
-        public static int maxTriangles = 5;
+        public static int maxTriangles = 36;
     }
 }

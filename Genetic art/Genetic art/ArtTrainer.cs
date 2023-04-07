@@ -64,7 +64,7 @@ namespace Genetic_art
             return population[bestIndex].DrawImage(x, y);
         }
 
-        private void setToBest()
+        public void setToBest()
         {
             for (int i = 0; i < population.Length; i++)
             {

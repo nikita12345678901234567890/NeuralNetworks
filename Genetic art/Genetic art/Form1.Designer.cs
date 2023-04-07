@@ -42,7 +42,7 @@
             this.Original.Image = ((System.Drawing.Image)(resources.GetObject("Original.Image")));
             this.Original.Location = new System.Drawing.Point(12, 12);
             this.Original.Name = "Original";
-            this.Original.Size = new System.Drawing.Size(149, 139);
+            this.Original.Size = new System.Drawing.Size(150, 150);
             this.Original.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.Original.TabIndex = 0;
             this.Original.TabStop = false;

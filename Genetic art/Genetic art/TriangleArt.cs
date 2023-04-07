@@ -72,7 +72,7 @@ namespace Genetic_art
 
         public double GetError()
         {
-            ///*
+            /*
             Bitmap image = DrawImage(originalImage.Width, originalImage.Height);
 
             int sumError = 0;
@@ -93,14 +93,14 @@ namespace Genetic_art
             return sumError / (originalImage.Width * originalImage.Height);
             //*/
 
-            /* Optimisation, do later
+            ///* Optimisation, do later
             System.Drawing.Imaging.BitmapData originalData = originalImage.LockBits(
                                                         new Rectangle(0, 0, originalImage.Width, originalImage.Height),
-                                                        System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format16bppArgb1555);
+                                                        System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 
             System.Drawing.Imaging.BitmapData myData = DrawImage(originalImage.Width, originalImage.Height).LockBits(
                                                         new Rectangle(0, 0, originalImage.Width, originalImage.Height),
-                                                        System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format16bppArgb1555);
+                                                        System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 
             // Get the address of the first line.
             IntPtr ptr1 = myData.Scan0;
@@ -113,10 +113,14 @@ namespace Genetic_art
             int bytes2 = Math.Abs(originalData.Stride) * originalImage.Height;
             byte[] originalRgbValues = new byte[bytes2];
 
+            // Copy the RGB values into the array.
+            System.Runtime.InteropServices.Marshal.Copy(ptr1, myRgbValues, 0, bytes1);
+            System.Runtime.InteropServices.Marshal.Copy(ptr2, originalRgbValues, 0, bytes2);
+
 
             //Bitmap image = DrawImage(originalImage.Width, originalImage.Height);
 
-            int sumError = 0;
+            long sumError = 0;
 
             for (int i = 0; i < myRgbValues.Length; i++)
             {
