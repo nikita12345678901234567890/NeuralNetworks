@@ -11,7 +11,7 @@ namespace Genetic_art
         public const float mutateColorChance = 0.5f;//vs mutating points
         public const int mutateColorBounds = 25;//25;
 
-        public const int minAlpha = 255;//for random triangle
+        public const int minAlpha = 25;//for random triangle
 
         public const float addChance = 0.2f;
         public const float mutateChance = 0.7f + addChance;
@@ -19,6 +19,6 @@ namespace Genetic_art
 
         public static Color backgroundColor = Color.White;
 
-        public static int maxTriangles = 36;
+        public static int maxTriangles = 400;
     }
 }
