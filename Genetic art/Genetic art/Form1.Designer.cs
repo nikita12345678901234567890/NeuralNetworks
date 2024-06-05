@@ -29,75 +29,74 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.Original = new System.Windows.Forms.PictureBox();
-            this.doButton = new System.Windows.Forms.Button();
-            this.iLabel = new System.Windows.Forms.Label();
-            this.OutputPanel = new System.Windows.Forms.Panel();
-            this.bestLabel = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.Original)).BeginInit();
-            this.SuspendLayout();
+            Original = new PictureBox();
+            doButton = new Button();
+            iLabel = new Label();
+            OutputPanel = new Panel();
+            bestLabel = new Label();
+            ((System.ComponentModel.ISupportInitialize)Original).BeginInit();
+            SuspendLayout();
             // 
             // Original
             // 
-            this.Original.Image = ((System.Drawing.Image)(resources.GetObject("Original.Image")));
-            this.Original.Location = new System.Drawing.Point(12, 12);
-            this.Original.Name = "Original";
-            this.Original.Size = new System.Drawing.Size(150, 150);
-            this.Original.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.Original.TabIndex = 0;
-            this.Original.TabStop = false;
+            Original.Image = (Image)resources.GetObject("Original.Image");
+            Original.Location = new Point(12, 12);
+            Original.Name = "Original";
+            Original.Size = new Size(150, 150);
+            Original.SizeMode = PictureBoxSizeMode.AutoSize;
+            Original.TabIndex = 0;
+            Original.TabStop = false;
             // 
             // doButton
             // 
-            this.doButton.Location = new System.Drawing.Point(1683, 12);
-            this.doButton.Name = "doButton";
-            this.doButton.Size = new System.Drawing.Size(75, 23);
-            this.doButton.TabIndex = 2;
-            this.doButton.Text = "Do";
-            this.doButton.UseVisualStyleBackColor = true;
-            this.doButton.Click += new System.EventHandler(this.doButton_Click);
+            doButton.Location = new Point(1683, 12);
+            doButton.Name = "doButton";
+            doButton.Size = new Size(75, 23);
+            doButton.TabIndex = 2;
+            doButton.Text = "Do";
+            doButton.UseVisualStyleBackColor = true;
+            doButton.Click += doButton_Click;
             // 
             // iLabel
             // 
-            this.iLabel.AutoSize = true;
-            this.iLabel.Location = new System.Drawing.Point(1745, 48);
-            this.iLabel.Name = "iLabel";
-            this.iLabel.Size = new System.Drawing.Size(13, 15);
-            this.iLabel.TabIndex = 3;
-            this.iLabel.Text = "0";
+            iLabel.AutoSize = true;
+            iLabel.Location = new Point(1745, 48);
+            iLabel.Name = "iLabel";
+            iLabel.Size = new Size(13, 15);
+            iLabel.TabIndex = 3;
+            iLabel.Text = "0";
             // 
             // OutputPanel
             // 
-            this.OutputPanel.Location = new System.Drawing.Point(167, 12);
-            this.OutputPanel.Name = "OutputPanel";
-            this.OutputPanel.Size = new System.Drawing.Size(1510, 828);
-            this.OutputPanel.TabIndex = 13;
+            OutputPanel.Location = new Point(167, 12);
+            OutputPanel.Name = "OutputPanel";
+            OutputPanel.Size = new Size(1510, 828);
+            OutputPanel.TabIndex = 13;
             // 
             // bestLabel
             // 
-            this.bestLabel.AutoSize = true;
-            this.bestLabel.Location = new System.Drawing.Point(1745, 136);
-            this.bestLabel.Name = "bestLabel";
-            this.bestLabel.Size = new System.Drawing.Size(13, 15);
-            this.bestLabel.TabIndex = 14;
-            this.bestLabel.Text = "0";
+            bestLabel.AutoSize = true;
+            bestLabel.Location = new Point(1745, 136);
+            bestLabel.Name = "bestLabel";
+            bestLabel.Size = new Size(13, 15);
+            bestLabel.TabIndex = 14;
+            bestLabel.Text = "0";
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1770, 852);
-            this.Controls.Add(this.bestLabel);
-            this.Controls.Add(this.iLabel);
-            this.Controls.Add(this.doButton);
-            this.Controls.Add(this.Original);
-            this.Controls.Add(this.OutputPanel);
-            this.Name = "Form1";
-            this.Text = "Form1";
-            ((System.ComponentModel.ISupportInitialize)(this.Original)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1770, 852);
+            Controls.Add(bestLabel);
+            Controls.Add(iLabel);
+            Controls.Add(doButton);
+            Controls.Add(Original);
+            Controls.Add(OutputPanel);
+            Name = "Form1";
+            Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)Original).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

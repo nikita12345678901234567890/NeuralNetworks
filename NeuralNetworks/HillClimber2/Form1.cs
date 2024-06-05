@@ -34,7 +34,7 @@ namespace HillClimber2
             Coordinates = new List<(TextBox xBox, TextBox yBox)>();
             Points = new List<Point>();
 
-            throw new Exception("Hmm...");
+            //throw new Exception("Hmm...");
             //perceptron = new Perceptron.Perceptron(amountOfInputs: Points.Count, min: 0, max: 1000, 1);
 
             canvas = new Bitmap(pictureBox1.Size.Width, pictureBox1.Height);

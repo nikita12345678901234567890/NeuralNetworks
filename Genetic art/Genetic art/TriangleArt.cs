@@ -56,7 +56,7 @@ namespace Genetic_art
             {
                 triangle.DrawTriangle(Gary, width, height);
             }
-
+             
             return bitmap;
         }
 

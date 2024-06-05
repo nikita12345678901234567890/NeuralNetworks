@@ -6,6 +6,8 @@ namespace HillClimber
     {
         static void Main(string[] args)
         {
+
+
             Random random = new Random();
 
             string target = "you are a fish?";
