@@ -24,7 +24,6 @@ namespace NeuralNetwork
                 dendrites[i] = new Dendrite(previousNerons[i], this, 1);
             }
 
-
             Activation = activation;
         }
 

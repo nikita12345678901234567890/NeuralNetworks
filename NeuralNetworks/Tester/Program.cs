@@ -17,6 +17,7 @@ namespace Tester
             Network network = new Network(ErrorFunctions.MSE, (1, ActivationFunctions.Identity), (10, ActivationFunctions.TanH), (10, ActivationFunctions.TanH), (10, ActivationFunctions.TanH), (1, ActivationFunctions.TanH));
 
             network.Randomize(random, -1, 1);
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
 
             double error = double.PositiveInfinity;
 
